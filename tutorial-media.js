@@ -1,5 +1,5 @@
 const backdrop = document.querySelector(".tutorial-backdrop");
-const posters = document.querySelectorAll("[data-animation]");
+const [intro, firstStep, ...finalSteps] = document.querySelectorAll("[data-animation]");
 
 async function playAnimation(poster) {
   const animation = new Image();
@@ -22,22 +22,11 @@ async function playAnimation(poster) {
   }
 }
 
-function observeAnimations() {
-  if (!("IntersectionObserver" in window)) {
-    posters.forEach(playAnimation);
-    return;
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting) continue;
-      observer.unobserve(entry.target);
-      playAnimation(entry.target);
-    }
-  }, { rootMargin: "64px 0px" });
-
-  posters.forEach((poster) => observer.observe(poster));
+async function loadAnimations() {
+  await backdrop.decode().catch(() => {});
+  await playAnimation(intro);
+  await playAnimation(firstStep);
+  await Promise.all(finalSteps.map(playAnimation));
 }
 
-// Start loading nearby animations after the backdrop can paint.
-backdrop.decode().catch(() => {}).then(observeAnimations);
+loadAnimations();
