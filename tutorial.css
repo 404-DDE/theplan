@@ -29,19 +29,36 @@ body {
   container-type: inline-size;
   max-inline-size: 2338px;
   margin-inline: auto;
-  --art-px: calc(100cqw / 2338);
+  --art-width: min(100vw, 2338px);
+  --layout-width: 2338;
+  --art-px: calc(var(--art-width) / var(--layout-width));
   --side-crop: 0;
+}
+
+@supports (width: 1cqw) {
+  .tutorial-site {
+    --art-width: 100cqw;
+  }
 }
 
 .tutorial-canvas {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   overflow: clip;
   min-height: calc(4850 * var(--art-px));
   padding-block-start: calc(4444 * var(--art-px));
-  background: #000 url("./assets/P3_bg.png") no-repeat;
-  background-size: calc(2338 * var(--art-px)) auto;
-  /* Align the original artwork with the tighter crop in the layout reference. */
-  background-position: calc(-1 * var(--side-crop) * var(--art-px)) calc(-147 * var(--art-px));
+  background: #000;
+}
+
+.tutorial-backdrop {
+  position: absolute;
+  z-index: -1;
+  top: calc(-147 * var(--art-px));
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
 }
 
 .tutorial-filters,
@@ -57,6 +74,14 @@ body {
   /* Soften the transparent contour while preserving the drawing inside it. */
   filter: url("#soft-gif-edge");
   pointer-events: none;
+}
+
+.tutorial-gif-cropped {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* The cropped frames already have the soft edge. */
+  filter: none;
 }
 
 .tutorial-intro {
@@ -410,12 +435,22 @@ a:focus-visible {
 
 @media (max-width: 740px) {
   .tutorial-site {
-    --art-px: calc(100cqw / 1433);
+    --layout-width: 1433;
     --side-crop: 453;
   }
 
   .tutorial-canvas {
     background-color: var(--tutorial-paper);
+  }
+
+  .tutorial-backdrop {
+    top: 0;
+  }
+
+  .step-title,
+  .step-frame {
+    /* The mobile backdrop includes the titles and frames. */
+    background-image: none;
   }
 
   .thread-footer {

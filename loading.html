@@ -6,9 +6,10 @@
   <title>ThePlan — 読み込み中</title>
   <link rel="stylesheet" href="./search.css">
   <link rel="prefetch" href="./tutorial.html" as="document">
-  <link rel="prefetch" href="./tutorial.css?v=comments-1" as="style">
-  <link rel="prefetch" href="./assets/P3_bg.png" as="image">
-  <link rel="prefetch" href="./assets/P3_preview.png" as="image">
+  <link rel="prefetch" href="./tutorial.css?v=media-1" as="style">
+  <link rel="preload" href="./assets/P3_mobile.png" as="image" media="(max-width: 740px)" fetchpriority="high">
+  <link rel="preload" href="./assets/P3_bg.png" as="image" media="not all and (max-width: 740px)" fetchpriority="high">
+  <link rel="preload" href="./assets/WEBGIF1-poster.png" as="image">
   <script src="./loading.js" defer></script>
   <!-- 2秒好像有些长了...可能js修改到1秒会好些? -->
 </head>
