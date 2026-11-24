@@ -8,24 +8,52 @@
   <link rel="stylesheet" href="./tutorial.css">
 </head>
 <body>
+  <svg class="tutorial-filters" width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="soft-gif-edge" x="0%" y="0%" width="100%" height="100%"
+      primitiveUnits="objectBoundingBox" color-interpolation-filters="sRGB">
+      <!-- At the GIFs' native size, the blur and alpha ramp feather a roughly two-pixel edge. -->
+      <feGaussianBlur in="SourceAlpha" stdDeviation="0.001 0.0018"/>
+      <feComponentTransfer result="edge-mask">
+        <feFuncA type="linear" slope="4" intercept="-2.7"/>
+      </feComponentTransfer>
+      <feComposite in="SourceGraphic" in2="edge-mask" operator="in"/>
+    </filter>
+  </svg>
   <div class="tutorial-site" id="top">
     <main class="tutorial-canvas">
       <h1 class="visually-hidden">Legit Ali3n Transf4mation <span lang="ja">宇宙人になる方</span></h1>
+      <img class="tutorial-gif tutorial-intro" src="./assets/WEBGIF1.gif" width="1920" height="1080"
+        alt="少女と宇宙人が並んでポーズをとる" decoding="async" fetchpriority="high">
       <a class="start" href="#step-1" aria-label="スタート" lang="ja"></a>
 
       <section class="step step-one" id="step-1" tabindex="-1">
         <h2 class="step-title"><span class="visually-hidden">STEP 1: Find your team</span></h2>
-        <div class="step-frame"></div>
+        <div class="step-frame">
+          <div class="step-window">
+            <img class="tutorial-gif" src="./assets/WEBGIF2.gif" width="1920" height="1080"
+              alt="ダンスを一緒に踊る仲間を集める" decoding="async">
+          </div>
+        </div>
       </section>
 
       <section class="step step-two" id="step-2" tabindex="-1">
         <h2 class="step-title"><span class="visually-hidden">STEP 2: Dance together in front of audience!</span></h2>
-        <div class="step-frame"></div>
+        <div class="step-frame">
+          <div class="step-window">
+            <img class="tutorial-gif" src="./assets/WEBGIF3.gif" width="1920" height="1080"
+              alt="観客の前で仲間と踊る" decoding="async">
+          </div>
+        </div>
       </section>
 
       <section class="step step-three" id="step-3" tabindex="-1">
         <h2 class="step-title"><span class="visually-hidden">STEP 3: Becoming an ALIEN!!!</span></h2>
-        <div class="step-frame"></div>
+        <div class="step-frame">
+          <div class="step-window">
+            <img class="tutorial-gif" src="./assets/WEBGIF4.gif" width="1920" height="1080"
+              alt="ステージで宇宙人に変身する" decoding="async">
+          </div>
+        </div>
       </section>
 
       <footer class="thread-footer" lang="ja">

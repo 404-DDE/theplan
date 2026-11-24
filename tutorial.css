@@ -35,11 +35,32 @@ body {
 
 .tutorial-canvas {
   position: relative;
+  overflow: clip;
   height: calc(4850 * var(--art-px));
   background: #000 url("./assets/P3_bg.png") no-repeat;
   background-size: calc(2338 * var(--art-px)) auto;
   /* Align the original artwork with the tighter crop in the layout reference. */
   background-position: calc(-1 * var(--side-crop) * var(--art-px)) calc(-147 * var(--art-px));
+}
+
+.tutorial-filters,
+.tutorial-gif {
+  position: absolute;
+}
+
+.tutorial-gif {
+  left: calc(var(--gif-x) * var(--art-px));
+  top: calc(var(--gif-y) * var(--art-px));
+  width: calc(var(--gif-width, 1920) * var(--art-px));
+  height: auto;
+  /* Soften the transparent contour while preserving the drawing inside it. */
+  filter: url("#soft-gif-edge");
+  pointer-events: none;
+}
+
+.tutorial-intro {
+  --gif-x: calc(209 - var(--side-crop));
+  --gif-y: 467;
 }
 
 .start {
@@ -61,22 +82,29 @@ body {
 .step-one {
   --step-y: 1304;
   --title-height: 93;
+  --gif-x: -421;
+  --gif-y: -173;
 }
 
 .step-two {
   --step-y: 2305;
   --title-height: 167;
+  --gif-x: -403;
+  --gif-y: -169;
+  --gif-width: 1859;
 }
 
 .step-three {
   --step-y: 3390;
   --title-height: 99;
+  --gif-x: -491;
+  --gif-y: -314;
+  --gif-width: 1999;
 }
 
-/* Reuse the hand-set headings and spotlight art from the supplied layout. */
+/* Reuse the headings and framed backgrounds from the supplied layout. */
 .step-title,
-.step-two .step-frame,
-.step-three .step-frame {
+.step-frame {
   background-image: url("./assets/P3_preview.png");
   background-repeat: no-repeat;
   background-size: calc(2338 * var(--art-px)) auto;
@@ -89,8 +117,16 @@ body {
 }
 
 .step-frame {
+  position: relative;
   height: calc(629 * var(--art-px));
   background-position: calc(-637 * var(--art-px)) calc(-1 * (var(--step-y) + var(--title-height)) * var(--art-px));
+}
+
+.step-window {
+  position: absolute;
+  /* Crop the GIFs to the inside of the green frames in the artwork. */
+  inset: calc(11 * var(--art-px));
+  overflow: hidden;
 }
 
 .thread-footer {
