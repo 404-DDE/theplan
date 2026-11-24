@@ -14,6 +14,11 @@ searchForm.addEventListener("submit", (event) => {
     return;
   }
 
+  if (query === "a real alien" || query === "real alien") {
+    window.location.assign("./real-alien.html");
+    return;
+  }
+
   searchInput.setAttribute("aria-invalid", "true");
   searchStatus.textContent = "該当するスレッドはありません。";
   searchInput.focus();
