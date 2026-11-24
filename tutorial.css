@@ -36,7 +36,8 @@ body {
 .tutorial-canvas {
   position: relative;
   overflow: clip;
-  height: calc(4850 * var(--art-px));
+  min-height: calc(4850 * var(--art-px));
+  padding-block-start: calc(4444 * var(--art-px));
   background: #000 url("./assets/P3_bg.png") no-repeat;
   background-size: calc(2338 * var(--art-px)) auto;
   /* Align the original artwork with the tighter crop in the layout reference. */
@@ -130,10 +131,11 @@ body {
 }
 
 .thread-footer {
-  position: absolute;
-  top: calc(4444 * var(--art-px));
-  left: calc((466 - var(--side-crop)) * var(--art-px));
-  width: calc(1405 * var(--art-px));
+  margin-inline-start: calc((453 - var(--side-crop)) * var(--art-px));
+  width: calc(1433 * var(--art-px));
+  padding-inline: calc(13 * var(--art-px)) calc(15 * var(--art-px));
+  padding-block-end: max(28px, calc(84 * var(--art-px)));
+  background: var(--tutorial-paper);
   color: #000;
   font-size: calc(34 * var(--art-px));
   line-height: 1.25;
@@ -189,6 +191,10 @@ body {
   margin-inline-end: .2em;
 }
 
+.comment-count:empty {
+  display: none;
+}
+
 .comment-prompt {
   display: flex;
   align-items: center;
@@ -196,7 +202,118 @@ body {
   min-height: calc(75 * var(--art-px));
   margin: 0;
   border-block: max(1px, calc(2 * var(--art-px))) solid #a1a393;
-  color: #797979;
+  color: #666a60;
+  font-size: inherit;
+  font-weight: 400;
+}
+
+.comment-panel {
+  padding: clamp(14px, calc(42 * var(--art-px)), 42px) clamp(14px, calc(74 * var(--art-px)), 74px) 0;
+  font-size: clamp(1rem, calc(26 * var(--art-px)), 1.25rem);
+  line-height: 1.5;
+}
+
+.comment-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comment-entry {
+  display: flex;
+  gap: .35em;
+  margin-block-end: .2em;
+  overflow-wrap: anywhere;
+}
+
+.comment-star,
+.comment-time,
+.comment-status {
+  color: #495669;
+}
+
+.comment-text {
+  color: #0645cf;
+  white-space: pre-wrap;
+}
+
+.comment-time {
+  margin-inline-start: .55em;
+  font-size: .8em;
+  white-space: nowrap;
+}
+
+.comment-action,
+.comment-send {
+  font: inherit;
+  cursor: pointer;
+}
+
+.comment-action {
+  border: 0;
+  padding: .35em .45em;
+  color: #385763;
+  background: transparent;
+  font-size: .88em;
+  text-decoration: underline;
+}
+
+.comment-entry .comment-action {
+  margin-inline-start: .35em;
+}
+
+.comment-form {
+  display: grid;
+  gap: 8px;
+  margin-block-start: clamp(36px, calc(140 * var(--art-px)), 140px);
+}
+
+.comment-form[hidden] {
+  display: none;
+}
+
+.comment-form textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  border: 2px solid #769da7;
+  border-radius: 0;
+  padding: .7em .8em;
+  color: #141414;
+  background: transparent;
+  font: inherit;
+}
+
+.comment-form textarea::placeholder {
+  color: #4d6c75;
+}
+
+.comment-send {
+  justify-self: end;
+  min-height: 42px;
+  border: 0;
+  padding: .3em .75em;
+  color: #fff;
+  background: #506f76;
+}
+
+.comment-panel button:disabled {
+  opacity: .62;
+  cursor: wait;
+}
+
+.comment-panel :focus-visible {
+  outline: 2px solid #211b7e;
+  outline-offset: 2px;
+}
+
+.comment-status {
+  margin: 0;
+  font-size: .9em;
+}
+
+.comment-status:not(:empty) {
+  margin-block-start: .55em;
 }
 
 .thread-pages {
@@ -298,7 +415,6 @@ a:focus-visible {
   }
 
   .tutorial-canvas {
-    height: calc(4850 * var(--art-px) + 90px);
     background-color: var(--tutorial-paper);
   }
 

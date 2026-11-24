@@ -1,0 +1,16 @@
+{
+  "name": "theplan-tutorial-comments",
+  "main": "worker.js",
+  "compatibility_date": "2026-07-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": false },
+  "vars": { "SITE_ORIGIN": "https://dde-404.github.io" },
+  "d1_databases": [
+    {
+      "binding": "COMMENTS",
+      "database_name": "theplan-tutorial-comments",
+      "database_id": "00000000-0000-0000-0000-000000000000"
+    }
+  ]
+}

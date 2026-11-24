@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="ThePlan — Alien Transformation Tutorial">
   <title>Alien Transformation Tutorial — ThePlan</title>
-  <link rel="stylesheet" href="./tutorial.css?v=947b1b4">
+  <link rel="stylesheet" href="./tutorial.css?v=comments-1">
+  <script type="module" src="./tutorial-comments.js"></script>
 </head>
 <body>
   <svg class="tutorial-filters" width="0" height="0" aria-hidden="true" focusable="false">
@@ -60,9 +61,22 @@
         <p class="thread-date">★1 <time datetime="2008-06-05T00:39:39">2008/06/05(木) 00:39:39</time></p>
         <div class="thread-meta">
           <span class="reply-arrow" aria-hidden="true">↶</span>
-          <span><i class="comment-icon" aria-hidden="true"></i><span class="comment-count">6</span> ID:bogie2001</span>
+          <span><i class="comment-icon" aria-hidden="true"></i><span class="comment-count" id="comment-count" aria-hidden="true"></span>ID:bogie2001</span>
         </div>
-        <p class="comment-prompt">コメントを投稿する<span aria-hidden="true">✎</span></p>
+        <section id="tutorial-comments" aria-labelledby="comment-title" data-api-url="">
+          <h2 class="comment-prompt" id="comment-title">コメントを投稿する<span aria-hidden="true">✎</span></h2>
+          <div class="comment-panel" lang="zh-CN">
+            <ul class="comment-list" id="comment-list" role="list"></ul>
+            <button class="comment-action" id="more-comments" type="button" hidden>更早的留言</button>
+            <noscript><p>开启 JavaScript 后可以查看和发布留言。</p></noscript>
+            <form class="comment-form" id="comment-form" method="post" hidden>
+              <label class="visually-hidden" for="comment-message">留言</label>
+              <textarea id="comment-message" rows="4" maxlength="500" placeholder="说些什么吧~" required></textarea>
+              <button class="comment-send" type="submit">发送<span aria-hidden="true"> ➜</span></button>
+            </form>
+            <p class="comment-status" id="comment-status" role="status"></p>
+          </div>
+        </section>
         <nav class="thread-pages" aria-label="ページ">
           <a class="pager-button" href="./index.html">戻る</a>
           <a class="pager-button current-page" href="#top" aria-label="1 ページの先頭" aria-current="page">1</a>
