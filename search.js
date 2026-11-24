@@ -30,6 +30,11 @@ searchForm.addEventListener("submit", (event) => {
     return;
   }
 
+  if (query === "alien affairs administration" || query === "aaa") {
+    window.location.assign("https://www.instagram.com/dancedanceevolution.gobelins/");
+    return;
+  }
+
   searchInput.setAttribute("aria-invalid", "true");
   searchStatus.textContent = "該当するスレッドはありません。";
   searchInput.focus();
