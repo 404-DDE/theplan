@@ -1,6 +1,5 @@
 const backdrop = document.querySelector(".tutorial-backdrop");
 const posters = document.querySelectorAll("[data-animation]");
-const finalPair = document.querySelectorAll("[data-animation-pair]");
 
 async function playAnimation(poster) {
   const animation = new Image();
@@ -29,17 +28,11 @@ function observeAnimations() {
     return;
   }
 
-  const pending = new Set(posters);
   const observer = new IntersectionObserver((entries) => {
-    for (const { isIntersecting, target } of entries) {
-      if (!isIntersecting) continue;
-
-      const nearby = target.hasAttribute("data-animation-pair") ? finalPair : [target];
-      for (const poster of nearby) {
-        if (!pending.delete(poster)) continue;
-        observer.unobserve(poster);
-        playAnimation(poster);
-      }
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      observer.unobserve(entry.target);
+      playAnimation(entry.target);
     }
   }, { rootMargin: "64px 0px" });
 
