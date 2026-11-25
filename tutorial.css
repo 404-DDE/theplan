@@ -436,6 +436,18 @@ a:focus-visible {
   padding-top: calc(14 * var(--art-px));
 }
 
+.explore-film-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .explore-film-link:hover {
+    color: #5b8cff;
+    text-decoration: underline;
+  }
+}
+
 .headlines {
   left: calc(1896 * var(--art-px));
   width: calc(311 * var(--art-px));
