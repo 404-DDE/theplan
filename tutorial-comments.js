@@ -1,5 +1,6 @@
 const section = document.querySelector("#tutorial-comments");
 const endpoint = section.dataset.apiUrl;
+const scrollArea = document.querySelector("#comment-scroll");
 const list = document.querySelector("#comment-list");
 const count = document.querySelector("#comment-count");
 const form = document.querySelector("#comment-form");
@@ -12,6 +13,7 @@ const temporaryKeys = new Map();
 const entries = new Map();
 const dateFormat = new Intl.DateTimeFormat("en-GB", { dateStyle: "short", timeStyle: "medium", hour12: false });
 let nextCursor = "";
+let loadFailed = false;
 let pendingComment;
 
 function readKey(id) {
@@ -111,8 +113,14 @@ function addComment(comment, prepend = false) {
 }
 
 async function loadComments() {
+  if (more.disabled) return;
   more.disabled = true;
-  status.textContent = "正在加载留言…";
+  if (nextCursor) {
+    more.textContent = "正在加载留言…";
+  } else {
+    status.textContent = "正在加载留言…";
+    more.hidden = true;
+  }
   try {
     const url = new URL(endpoint);
     if (nextCursor) url.searchParams.set("before", nextCursor);
@@ -123,13 +131,17 @@ async function loadComments() {
     nextCursor = page.nextCursor;
     for (const comment of page.comments) addComment(comment);
     updateCount();
+    loadFailed = false;
     more.textContent = "更早的留言";
     more.hidden = !nextCursor;
-    form.hidden = false;
-    status.textContent = entries.size ? "" : "还没有留言。";
+    if (form.hidden) {
+      form.hidden = false;
+      status.textContent = entries.size ? "" : "还没有留言。";
+    }
   } catch {
-    status.textContent = "加载失败，请重试。";
-    more.textContent = "重试";
+    loadFailed = true;
+    if (form.hidden) status.textContent = "加载失败，请重试。";
+    more.textContent = "重试加载留言";
     more.hidden = false;
   } finally {
     more.disabled = false;
@@ -167,6 +179,7 @@ async function publishComment(event) {
 
     const { comment } = await response.json();
     addComment(comment, true);
+    scrollArea.scrollTop = 0;
     updateCount();
     pendingComment = undefined;
     form.reset();
@@ -182,6 +195,10 @@ async function publishComment(event) {
 if (endpoint) {
   form.addEventListener("submit", publishComment);
   more.addEventListener("click", loadComments);
+  scrollArea.addEventListener("scroll", () => {
+    const remaining = scrollArea.scrollHeight - scrollArea.scrollTop - scrollArea.clientHeight;
+    if (nextCursor && !loadFailed && remaining <= 40) loadComments();
+  }, { passive: true });
   loadComments();
 } else {
   status.textContent = "留言区暂未开放。";

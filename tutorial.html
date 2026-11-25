@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="ThePlan — Alien Transformation Tutorial">
   <title>Alien Transformation Tutorial — ThePlan</title>
-  <link rel="stylesheet" href="./tutorial.css?v=media-1">
+  <link rel="stylesheet" href="./tutorial.css?v=comment-scroll-1">
   <script type="module" src="./tutorial-media.js?v=ordered-1"></script>
-  <script type="module" src="./tutorial-comments.js"></script>
+  <script type="module" src="./tutorial-comments.js?v=comment-scroll-1"></script>
 </head>
 <body>
   <svg class="tutorial-filters" width="0" height="0" aria-hidden="true" focusable="false">
@@ -73,8 +73,6 @@
         <section id="tutorial-comments" aria-labelledby="comment-title" data-api-url="https://theplan-dde-comments.tenacioushill2.chatgpt.site/comments">
           <h2 class="comment-prompt" id="comment-title">コメントを投稿する<span aria-hidden="true">✎</span></h2>
           <div class="comment-panel" lang="zh-CN">
-            <ul class="comment-list" id="comment-list" role="list"></ul>
-            <button class="comment-action" id="more-comments" type="button" hidden>更早的留言</button>
             <noscript><p>开启 JavaScript 后可以查看和发布留言。</p></noscript>
             <form class="comment-form" id="comment-form" method="post" hidden>
               <label class="visually-hidden" for="comment-message">留言</label>
@@ -82,6 +80,10 @@
               <button class="comment-send" type="submit">发送<span aria-hidden="true"> ➜</span></button>
             </form>
             <p class="comment-status" id="comment-status" role="status"></p>
+            <div class="comment-scroll" id="comment-scroll" role="region" aria-label="留言列表" tabindex="0">
+              <ul class="comment-list" id="comment-list" role="list"></ul>
+              <button class="comment-action" id="more-comments" type="button" hidden>更早的留言</button>
+            </div>
           </div>
         </section>
         <nav class="thread-pages" aria-label="ページ">

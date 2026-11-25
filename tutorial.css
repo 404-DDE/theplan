@@ -238,6 +238,22 @@ body {
   line-height: 1.5;
 }
 
+.comment-scroll {
+  --comment-row-height: 1.75em;
+  max-block-size: calc(10 * var(--comment-row-height));
+  overflow-y: auto;
+  scrollbar-color: #769da7 transparent;
+  scrollbar-gutter: stable;
+}
+
+.comment-form:not([hidden]) ~ .comment-scroll {
+  margin-block-start: clamp(14px, calc(32 * var(--art-px)), 32px);
+}
+
+#more-comments {
+  overflow-anchor: none;
+}
+
 .comment-list {
   margin: 0;
   padding: 0;
@@ -247,7 +263,8 @@ body {
 .comment-entry {
   display: flex;
   gap: .35em;
-  margin-block-end: .2em;
+  min-block-size: var(--comment-row-height);
+  padding-block-end: .2em;
   overflow-wrap: anywhere;
 }
 
@@ -285,12 +302,12 @@ body {
 
 .comment-entry .comment-action {
   margin-inline-start: .35em;
+  padding-block: .15em;
 }
 
 .comment-form {
   display: grid;
   gap: 8px;
-  margin-block-start: clamp(36px, calc(140 * var(--art-px)), 140px);
 }
 
 .comment-form[hidden] {
