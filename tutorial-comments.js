@@ -62,6 +62,10 @@ async function requestComments(url, method = "GET", payload) {
   });
 }
 
+function checkResponse(response) {
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+}
+
 function updateCount() {
   count.textContent = `${entries.size}${nextCursor ? "+" : ""}`;
 }
@@ -70,15 +74,16 @@ async function deleteComment(id, button) {
   button.disabled = true;
   try {
     const response = await requestComments(`${endpoint}/${id}`, "DELETE", { deleteKey: readKey(id) });
-    if (!response.ok && response.status !== 404) throw new Error("Delete failed");
-
     const alreadyRemoved = response.status === 404;
+    if (!alreadyRemoved) checkResponse(response);
+
     entries.get(id).remove();
     entries.delete(id);
     forgetKey(id);
     updateCount();
     status.textContent = alreadyRemoved ? "这条留言已不在列表中。" : "留言已删除。";
-  } catch {
+  } catch (error) {
+    console.error("Could not delete comment", error);
     status.textContent = "删除失败，请重试。";
     button.disabled = false;
   }
@@ -121,7 +126,7 @@ async function loadComments() {
     const url = new URL(endpoint);
     if (before) url.searchParams.set("before", before);
     const response = await requestComments(url);
-    if (!response.ok) throw new Error("Load failed");
+    checkResponse(response);
 
     const page = await response.json();
     nextCursor = page.nextCursor;
@@ -136,7 +141,8 @@ async function loadComments() {
       hasLoadedFirstPage = true;
     }
     loadState = "idle";
-  } catch {
+  } catch (error) {
+    console.error("Could not load comments", error);
     loadState = "failed";
     if (!hasLoadedFirstPage) status.textContent = "加载失败，请重试。";
     more.textContent = "重试加载留言";
@@ -167,13 +173,11 @@ async function publishComment(event) {
 
     const saved = saveKey(pendingComment.id, pendingComment.deleteKey);
     const response = await requestComments(endpoint, "POST", pendingComment);
-    if (!response.ok) {
-      if (response.status === 409) {
-        forgetKey(pendingComment.id);
-        pendingComment = undefined;
-      }
-      throw new Error("Publish failed");
+    if (response.status === 409) {
+      forgetKey(pendingComment.id);
+      pendingComment = undefined;
     }
+    checkResponse(response);
 
     const { comment } = await response.json();
     addComment(comment, true);
@@ -182,7 +186,8 @@ async function publishComment(event) {
     pendingComment = undefined;
     form.reset();
     status.textContent = saved ? "留言已发送。" : "留言已发送。请在离开本页前删除，浏览器无法保存删除权限。";
-  } catch {
+  } catch (error) {
+    console.error("Could not publish comment", error);
     status.textContent = "发送失败，留言已保留。请重试。";
   } finally {
     send.disabled = false;
