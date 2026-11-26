@@ -1,0 +1,13 @@
+{
+  "name": "theplan-pages",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "devDependencies": {
+    "clean-css": "5.3.3",
+    "html-minifier-terser": "7.2.0",
+    "javascript-obfuscator": "4.1.1",
+    "terser": "5.39.0"
+  }
+}
