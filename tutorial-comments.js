@@ -89,7 +89,7 @@ async function deleteComment(id, button) {
   }
 }
 
-function addComment(comment, prepend = false) {
+function addComment(comment, { prepend = false } = {}) {
   if (entries.has(comment.id)) return;
 
   const entry = commentTemplate.content.firstElementChild.cloneNode(true);
@@ -187,7 +187,7 @@ async function publishComment(event) {
   status.textContent = "正在发送留言…";
   try {
     const { comment, saved } = await postComment(body);
-    addComment(comment, true);
+    addComment(comment, { prepend: true });
     scrollArea.scrollTop = 0;
     updateCount();
     pendingSubmission = undefined;
