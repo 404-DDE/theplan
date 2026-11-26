@@ -19,6 +19,9 @@ body {
   max-inline-size: var(--max-page-width);
   margin-inline: auto;
   --desktop-canvas-width: 2338;
+  /* Position and width of the middle column on the desktop artwork. */
+  --tutorial-column-x: 453;
+  --tutorial-column-width: 1433;
   --max-page-width: calc(var(--desktop-canvas-width) * 1px);
   --art-width: min(100vw, var(--max-page-width));
   --layout-width: var(--desktop-canvas-width);
@@ -96,6 +99,7 @@ body {
   scroll-margin-top: 16px;
 }
 
+/* Step positions align with P3_preview.png. GIF offsets are relative to the animation window. */
 .team-step {
   --step-y: 1304;
   --title-height: 93;
@@ -145,8 +149,8 @@ body {
 }
 
 .tutorial-footer {
-  margin-inline-start: calc((453 - var(--side-crop)) * var(--art-px));
-  width: calc(1433 * var(--art-px));
+  margin-inline-start: calc((var(--tutorial-column-x) - var(--side-crop)) * var(--art-px));
+  width: calc(var(--tutorial-column-width) * var(--art-px));
   padding-inline: calc(13 * var(--art-px)) calc(15 * var(--art-px));
   padding-block-end: max(28px, calc(84 * var(--art-px)));
   background: var(--tutorial-paper);
@@ -454,8 +458,9 @@ a:focus-visible {
 /* Match the mobile backdrop breakpoint in tutorial.html and loading.html. */
 @media (max-width: 740px) {
   .page {
-    --layout-width: 1433;
-    --side-crop: 453;
+    /* P3_mobile.png is 1240px wide. Overlay positions use the desktop artwork coordinates. */
+    --layout-width: var(--tutorial-column-width);
+    --side-crop: var(--tutorial-column-x);
   }
 
   .main {
