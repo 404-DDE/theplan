@@ -35,6 +35,11 @@ searchForm.addEventListener("submit", (event) => {
     return;
   }
 
+  if (query === "persona") {
+    window.location.assign("./persona.html");
+    return;
+  }
+
   searchInput.setAttribute("aria-invalid", "true");
   searchStatus.textContent = "該当するスレッドはありません。";
   searchInput.focus();
