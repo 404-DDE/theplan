@@ -449,6 +449,7 @@ a:focus-visible {
   margin: 0 0 calc(34 * var(--art-px));
 }
 
+/* Tutorial mobile breakpoint from tutorial.html. */
 @media (max-width: 740px) {
   .page {
     --layout-width: 1433;
