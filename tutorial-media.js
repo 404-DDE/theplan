@@ -5,7 +5,8 @@ const finalSteps = document.querySelectorAll("[data-animation-stage='final']");
 
 async function playAnimation(poster) {
   const animation = new Image();
-  const sources = [poster.dataset.animation, poster.dataset.fallback].filter(Boolean);
+  const { animation: src, fallback } = poster.dataset;
+  const sources = [src, fallback].filter(Boolean);
 
   for (const source of sources) {
     animation.src = source;
@@ -15,10 +16,10 @@ async function playAnimation(poster) {
       continue;
     }
 
-    if (source === poster.dataset.fallback) {
+    if (source === fallback) {
       poster.classList.remove("cropped-animation");
-      poster.width = Number(poster.dataset.fallbackWidth ?? animation.naturalWidth);
-      poster.height = Number(poster.dataset.fallbackHeight ?? animation.naturalHeight);
+      poster.width = animation.naturalWidth;
+      poster.height = animation.naturalHeight;
     }
     poster.src = source;
     return;

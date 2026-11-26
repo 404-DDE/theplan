@@ -22,7 +22,6 @@ const entries = new Map();
 const dateFormat = new Intl.DateTimeFormat("en-GB", { dateStyle: "short", timeStyle: "medium", hour12: false });
 let nextCursor = "";
 let loadState = "idle";
-let firstPageLoaded = false;
 let pendingPost;
 
 function readKey(id) {
@@ -51,7 +50,7 @@ function forgetKey(id) {
   }
 }
 
-async function requestComments(url, method = "GET", payload) {
+function requestComments(url, method = "GET", payload) {
   return fetch(url, {
     method,
     headers: payload ? { "Content-Type": "application/json" } : undefined,
@@ -60,10 +59,6 @@ async function requestComments(url, method = "GET", payload) {
     referrerPolicy: "no-referrer",
     signal: AbortSignal.timeout(12000),
   });
-}
-
-function checkResponse(response) {
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
 }
 
 function updateCount() {
@@ -75,7 +70,7 @@ async function deleteComment(id, button) {
   try {
     const response = await requestComments(`${endpoint}/${id}`, "DELETE", { deleteKey: readKey(id) });
     const alreadyRemoved = response.status === 404;
-    if (!alreadyRemoved) checkResponse(response);
+    if (!response.ok && !alreadyRemoved) throw new Error(`HTTP ${response.status}`);
 
     entries.get(id).remove();
     entries.delete(id);
@@ -126,7 +121,7 @@ async function loadComments() {
     const url = new URL(endpoint);
     if (before) url.searchParams.set("before", before);
     const response = await requestComments(url);
-    checkResponse(response);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
     const page = await response.json();
     nextCursor = page.nextCursor;
@@ -135,42 +130,20 @@ async function loadComments() {
 
     more.textContent = "更早的留言";
     more.hidden = !nextCursor;
-    if (!firstPageLoaded) {
+    if (form.hidden) {
       form.hidden = false;
       status.textContent = entries.size ? "" : "还没有留言。";
-      firstPageLoaded = true;
     }
     loadState = "idle";
   } catch (error) {
     console.error("Could not load comments", error);
     loadState = "failed";
-    if (!firstPageLoaded) status.textContent = "加载失败，请重试。";
+    if (form.hidden) status.textContent = "加载失败，请重试。";
     more.textContent = "重试加载留言";
     more.hidden = false;
   } finally {
     more.disabled = false;
   }
-}
-
-async function postComment(body) {
-  // Retry the same unconfirmed post with its original ID to avoid a duplicate.
-  if (pendingPost?.body !== body) {
-    const bytes = crypto.getRandomValues(new Uint8Array(32));
-    const deleteKey = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
-    pendingPost = { id: crypto.randomUUID(), deleteKey, body };
-  }
-
-  const post = pendingPost;
-  const saved = saveKey(post.id, post.deleteKey);
-  const response = await requestComments(endpoint, "POST", post);
-  if (response.status === 409) {
-    forgetKey(post.id);
-    pendingPost = undefined;
-  }
-  checkResponse(response);
-
-  const { comment } = await response.json();
-  return { comment, saved };
 }
 
 async function publishComment(event) {
@@ -186,7 +159,25 @@ async function publishComment(event) {
   message.readOnly = true;
   status.textContent = "正在发送留言…";
   try {
-    const { comment, saved } = await postComment(body);
+    // Use the original ID when retrying the same text.
+    if (pendingPost?.body !== body) {
+      const bytes = crypto.getRandomValues(new Uint8Array(32));
+      const deleteKey = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+      pendingPost = { id: crypto.randomUUID(), deleteKey, body };
+    }
+
+    const { id, deleteKey } = pendingPost;
+    const saved = saveKey(id, deleteKey);
+    const response = await requestComments(endpoint, "POST", pendingPost);
+    if (!response.ok) {
+      if (response.status === 409) {
+        forgetKey(id);
+        pendingPost = undefined;
+      }
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const { comment } = await response.json();
     addComment(comment, { prepend: true });
     scrollArea.scrollTop = 0;
     updateCount();
