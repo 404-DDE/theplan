@@ -16,10 +16,12 @@ body {
 .page {
   position: relative;
   container-type: inline-size;
-  max-inline-size: 2338px;
+  max-inline-size: var(--max-page-width);
   margin-inline: auto;
-  --art-width: min(100vw, 2338px);
-  --layout-width: 2338;
+  --desktop-canvas-width: 2338;
+  --max-page-width: calc(var(--desktop-canvas-width) * 1px);
+  --art-width: min(100vw, var(--max-page-width));
+  --layout-width: var(--desktop-canvas-width);
   --art-px: calc(var(--art-width) / var(--layout-width));
   --side-crop: 0;
 }
@@ -121,7 +123,7 @@ body {
 .frame {
   background-image: url("./assets/P3_preview.png");
   background-repeat: no-repeat;
-  background-size: calc(2338 * var(--art-px)) auto;
+  background-size: calc(var(--desktop-canvas-width) * var(--art-px)) auto;
 }
 
 .step-title {

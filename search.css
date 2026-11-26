@@ -3,6 +3,8 @@
   font-family: "Noto Sans CJK JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
   --paper: linear-gradient(180deg, #fefff4 8%, #fefff7 23% 59%, #fefff4 79%, #fdfff3 100%);
   --link-blue: #0b00ff;
+  --search-canvas-width: 1908;
+  --search-canvas-height: 1073;
 }
 
 * {
@@ -19,10 +21,10 @@ body {
 
 .wrap {
   position: relative;
-  inline-size: min(100%, calc(100svh * 1908 / 1073));
-  aspect-ratio: 1908 / 1073;
+  inline-size: min(100%, calc(100svh * var(--search-canvas-width) / var(--search-canvas-height)));
+  aspect-ratio: var(--search-canvas-width) / var(--search-canvas-height);
   container-type: inline-size;
-  --design-px: calc(100cqw / 1908);
+  --design-px: calc(100cqw / var(--search-canvas-width));
 }
 
 .cloud {
@@ -188,7 +190,10 @@ body {
 
 .spin {
   display: block;
-  width: max(48px, calc(80 * min(100vw / 1908, 100svh / 1073)));
+  width: max(48px, calc(80 * min(
+    100vw / var(--search-canvas-width),
+    100svh / var(--search-canvas-height)
+  )));
   height: auto;
   animation: rotate-clockwise 1s linear infinite;
 }
