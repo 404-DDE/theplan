@@ -6,17 +6,17 @@
   <meta name="description" content="ThePlan スレタイ検索">
   <title>ThePlan</title>
   <link rel="stylesheet" href="./visually-hidden.css">
-  <link rel="stylesheet" href="./search.css?v=3">
+  <link rel="stylesheet" href="./search.css?v=4">
   <link rel="prefetch" href="./assets/P2_loading.png" as="image">
   <script src="./search.js?v=7" defer></script>
 </head>
 <body>
   <main class="wrap">
     <div class="clouds" aria-hidden="true">
-      <span class="cl c1"></span>
-      <span class="cl c2"></span>
-      <span class="cl c3"></span>
-      <span class="cl c4"></span>
+      <span class="cloud cloud-1"></span>
+      <span class="cloud cloud-2"></span>
+      <span class="cloud cloud-3"></span>
+      <span class="cloud cloud-4"></span>
     </div>
 
     <h1 class="logo"><img src="./assets/P1_theplan.png" width="567" height="155" alt="ThePlan"></h1>
@@ -27,12 +27,12 @@
       <button type="button" id="guide-button" aria-haspopup="dialog">GUIDE(FAQ)</button>
     </nav>
 
-    <form class="frm" id="search-form" role="search" action="./index.html">
+    <form class="search-form" id="search-form" role="search" action="./index.html">
       <label for="search-query" class="visually-hidden">スレッドのタイトル</label>
       <input id="search-query" name="q" type="search" enterkeyhint="search" autocomplete="off"
         autocapitalize="none" spellcheck="false" aria-describedby="search-status" required>
       <button type="submit">スレタイ検索</button>
-      <p class="msg" id="search-status" role="status"></p>
+      <p class="search-status" id="search-status" role="status"></p>
     </form>
   </main>
 

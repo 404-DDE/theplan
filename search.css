@@ -25,7 +25,7 @@ body {
   --design-px: calc(100cqw / 1908);
 }
 
-.cl {
+.cloud {
   position: absolute;
   --cloud-px: var(--design-px);
   left: calc((332 + var(--art-x)) * var(--design-px));
@@ -38,28 +38,28 @@ body {
   background-repeat: no-repeat;
 }
 
-.c1 {
+.cloud-1 {
   --art-x: 125;
   --art-y: 0;
   --art-width: 210;
   --art-height: 128;
 }
 
-.c2 {
+.cloud-2 {
   --art-x: 983;
   --art-y: 127;
   --art-width: 199;
   --art-height: 153;
 }
 
-.c3 {
+.cloud-3 {
   --art-x: 0;
   --art-y: 289;
   --art-width: 146;
   --art-height: 128;
 }
 
-.c4 {
+.cloud-4 {
   --art-x: 410;
   --art-y: 624;
   --art-width: 172;
@@ -112,7 +112,7 @@ body {
   text-decoration: underline;
 }
 
-.frm {
+.search-form {
   position: absolute;
   top: calc(657 * var(--design-px));
   left: calc(452 * var(--design-px));
@@ -122,8 +122,8 @@ body {
   gap: calc(12 * var(--design-px));
 }
 
-.frm input,
-.frm button {
+.search-form input,
+.search-form button {
   appearance: none;
   min-inline-size: 0;
   height: calc(73 * var(--design-px));
@@ -133,13 +133,13 @@ body {
   font-family: inherit;
 }
 
-.frm input {
+.search-form input {
   background: #fff;
   padding-inline: max(8px, calc(12 * var(--design-px)));
   font-size: max(16px, calc(34 * var(--design-px)));
 }
 
-.frm button {
+.search-form button {
   background: #eee;
   padding: 0;
   font-size: calc(37 * var(--design-px));
@@ -148,11 +148,11 @@ body {
   cursor: pointer;
 }
 
-.frm button:active {
+.search-form button:active {
   background: #ddd;
 }
 
-.msg {
+.search-status {
   grid-column: 1 / -1;
   margin: 0;
   font-size: max(13px, calc(21 * var(--design-px)));
@@ -210,28 +210,28 @@ body {
     aspect-ratio: auto;
   }
 
-  .cl {
+  .cloud {
     --cloud-px: calc(100cqw / 870);
   }
 
-  .c1 {
+  .cloud-1 {
     left: 12%;
     top: 10%;
   }
 
-  .c2 {
+  .cloud-2 {
     --cloud-px: calc(100cqw / 1050);
     left: auto;
     right: 3%;
     top: 11%;
   }
 
-  .c3 {
+  .cloud-3 {
     left: 4%;
     top: 44%;
   }
 
-  .c4 {
+  .cloud-4 {
     left: 41%;
     top: auto;
     bottom: 10%;
@@ -251,7 +251,7 @@ body {
     line-height: 1.25;
   }
 
-  .frm {
+  .search-form {
     left: 4%;
     top: 60%;
     width: 92%;
@@ -259,12 +259,12 @@ body {
     gap: 7px;
   }
 
-  .frm input,
-  .frm button {
+  .search-form input,
+  .search-form button {
     height: 44px;
   }
 
-  .frm button {
+  .search-form button {
     padding-inline: 8px;
     font-size: 15px;
   }
