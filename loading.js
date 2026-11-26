@@ -1,8 +1,6 @@
-const delayMs = 2000;
-
-// Give the loading screen a frame to paint before starting its timer.
+// 等加载页画出来再计时。
 requestAnimationFrame(() => {
   requestAnimationFrame(() => {
-    setTimeout(() => window.location.replace("./tutorial.html"), delayMs);
+    setTimeout(() => window.location.replace("./tutorial.html"), 2000);
   });
 });

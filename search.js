@@ -1,7 +1,7 @@
-const form = document.querySelector("form[role='search']");
-const input = form.querySelector("input[type='search']");
-const feedback = form.querySelector("[role='status']");
-const guide = document.querySelector("#guide");
+const form = document.getElementById("search-form");
+const input = document.getElementById("search-query");
+const feedback = document.getElementById("search-status");
+const guide = document.getElementById("guide");
 
 const routes = [
   { queries: ["alien transformation tutorial"], href: "./loading.html" },
@@ -17,7 +17,7 @@ const routes = [
   { queries: ["persona"], href: "./persona.html" },
 ];
 
-document.querySelector(".nav [aria-haspopup='dialog']").addEventListener("click", () => guide.showModal());
+document.getElementById("guide-button").addEventListener("click", () => guide.showModal());
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();

@@ -17,18 +17,19 @@ rowTemplate.innerHTML = `
 `;
 
 const storagePrefix = "theplan:tutorial-comment:";
-const temporaryKeys = new Map();
-const entries = new Map();
+const tabKeys = new Map();
+const rows = new Map();
 const dateFormat = new Intl.DateTimeFormat("en-GB", { dateStyle: "short", timeStyle: "medium", hour12: false });
-let nextCursor = "";
-let loadState = "idle";
-let pendingPost;
+let nextCursor;
+let loadOnScroll = true;
+let pending;
 
 function readKey(id) {
+  if (tabKeys.has(id)) return tabKeys.get(id);
   try {
-    return localStorage.getItem(storagePrefix + id) || temporaryKeys.get(id);
+    return localStorage.getItem(storagePrefix + id);
   } catch {
-    return temporaryKeys.get(id);
+    return null;
   }
 }
 
@@ -37,46 +38,47 @@ function saveKey(id, deleteKey) {
     localStorage.setItem(storagePrefix + id, deleteKey);
     return true;
   } catch {
-    temporaryKeys.set(id, deleteKey);
+    tabKeys.set(id, deleteKey);
     return false;
   }
 }
 
 function forgetKey(id) {
-  temporaryKeys.delete(id);
+  tabKeys.delete(id);
   try {
     localStorage.removeItem(storagePrefix + id);
-  } catch {
-  }
+  } catch {}
 }
 
-function requestComments(url, method = "GET", payload) {
-  return fetch(url, {
+function request(url, method, data) {
+  const options = {
     method,
-    headers: payload ? { "Content-Type": "application/json" } : undefined,
-    body: payload ? JSON.stringify(payload) : undefined,
     credentials: "omit",
     referrerPolicy: "no-referrer",
-    signal: AbortSignal.timeout(12000),
-  });
+  };
+  if (AbortSignal.timeout) options.signal = AbortSignal.timeout(12000);
+  if (data) {
+    options.headers = { "Content-Type": "application/json" };
+    options.body = JSON.stringify(data);
+  }
+  return fetch(url, options);
 }
 
 function updateCount() {
-  count.textContent = `${entries.size}${nextCursor ? "+" : ""}`;
+  count.textContent = `${rows.size}${nextCursor ? "+" : ""}`;
 }
 
-async function deleteComment(id, button) {
+async function deleteComment(id, key, button) {
   button.disabled = true;
   try {
-    const response = await requestComments(`${endpoint}/${id}`, "DELETE", { deleteKey: readKey(id) });
-    const alreadyRemoved = response.status === 404;
-    if (!response.ok && !alreadyRemoved) throw new Error(`HTTP ${response.status}`);
+    const res = await request(`${endpoint}/${id}`, "DELETE", { deleteKey: key });
+    if (!res.ok && res.status !== 404) throw new Error(`HTTP ${res.status}`);
 
-    entries.get(id).remove();
-    entries.delete(id);
+    rows.get(id).remove();
+    rows.delete(id);
     forgetKey(id);
     updateCount();
-    status.textContent = alreadyRemoved ? "这条留言已不在列表中。" : "留言已删除。";
+    status.textContent = res.status === 404 ? "这条留言已不在列表中。" : "留言已删除。";
   } catch (error) {
     console.error("Could not delete comment", error);
     status.textContent = "删除失败，请重试。";
@@ -84,69 +86,69 @@ async function deleteComment(id, button) {
   }
 }
 
-function addComment(comment, { prepend = false } = {}) {
-  if (entries.has(comment.id)) return;
+function addComment(comment, atTop = false) {
+  const { id, body, createdAt } = comment;
+  if (rows.has(id)) return;
 
-  const entry = rowTemplate.content.firstElementChild.cloneNode(true);
-  entry.querySelector(".comment-text").textContent = comment.body;
+  const row = rowTemplate.content.firstElementChild.cloneNode(true);
+  row.querySelector(".comment-text").textContent = body;
 
-  const time = entry.querySelector(".comment-time");
-  time.dateTime = comment.createdAt;
-  time.textContent = dateFormat.format(new Date(comment.createdAt));
+  const time = row.querySelector("time");
+  time.dateTime = createdAt;
+  time.textContent = dateFormat.format(new Date(createdAt));
 
-  const deleteButton = entry.querySelector("button");
-  if (readKey(comment.id)) {
-    deleteButton.addEventListener("click", () => deleteComment(comment.id, deleteButton));
+  const button = row.querySelector("button");
+  const key = readKey(id);
+  if (key) {
+    button.addEventListener("click", () => deleteComment(id, key, button));
   } else {
-    deleteButton.remove();
+    button.remove();
   }
 
-  if (prepend) list.prepend(entry);
-  else list.append(entry);
-  entries.set(comment.id, entry);
+  if (atTop) list.prepend(row);
+  else list.append(row);
+  rows.set(id, row);
 }
 
 async function loadComments() {
-  if (loadState === "loading") return;
-
-  loadState = "loading";
   more.disabled = true;
 
-  const before = nextCursor;
-  const progress = before ? more : status;
-  progress.textContent = "正在加载留言…";
-  if (!before) more.hidden = true;
+  if (nextCursor) {
+    more.textContent = "正在加载留言…";
+  } else {
+    more.hidden = true;
+    status.textContent = "正在加载留言…";
+  }
 
   try {
     const url = new URL(endpoint);
-    if (before) url.searchParams.set("before", before);
-    const response = await requestComments(url);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    if (nextCursor) url.searchParams.set("before", nextCursor);
+    const res = await request(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    const page = await response.json();
-    nextCursor = page.nextCursor;
-    for (const comment of page.comments) addComment(comment);
+    const { comments, nextCursor: cursor } = await res.json();
+    for (const comment of comments) addComment(comment);
+    nextCursor = cursor;
     updateCount();
 
     more.textContent = "更早的留言";
     more.hidden = !nextCursor;
     if (form.hidden) {
       form.hidden = false;
-      status.textContent = entries.size ? "" : "还没有留言。";
+      status.textContent = rows.size ? "" : "还没有留言。";
     }
-    loadState = "idle";
+    loadOnScroll = true;
   } catch (error) {
     console.error("Could not load comments", error);
-    loadState = "failed";
+    loadOnScroll = false;
     if (form.hidden) status.textContent = "加载失败，请重试。";
     more.textContent = "重试加载留言";
     more.hidden = false;
-  } finally {
-    more.disabled = false;
   }
+  more.disabled = false;
 }
 
-async function publishComment(event) {
+async function sendComment(event) {
   event.preventDefault();
   if (send.disabled) return;
   const body = message.value.trim();
@@ -159,46 +161,42 @@ async function publishComment(event) {
   message.readOnly = true;
   status.textContent = "正在发送留言…";
   try {
-    // Use the original ID when retrying the same text.
-    if (pendingPost?.body !== body) {
+    if (!pending || pending.body !== body) {
       const bytes = crypto.getRandomValues(new Uint8Array(32));
       const deleteKey = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
-      pendingPost = { id: crypto.randomUUID(), deleteKey, body };
+      pending = { id: crypto.randomUUID(), deleteKey, body };
     }
 
-    const { id, deleteKey } = pendingPost;
+    const { id, deleteKey } = pending;
     const saved = saveKey(id, deleteKey);
-    const response = await requestComments(endpoint, "POST", pendingPost);
-    if (!response.ok) {
-      if (response.status === 409) {
-        forgetKey(id);
-        pendingPost = undefined;
-      }
-      throw new Error(`HTTP ${response.status}`);
+    const res = await request(endpoint, "POST", pending);
+    if (res.status === 409) {
+      forgetKey(id);
+      pending = undefined;
     }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    const { comment } = await response.json();
-    addComment(comment, { prepend: true });
+    const { comment } = await res.json();
+    addComment(comment, true);
     scrollArea.scrollTop = 0;
     updateCount();
-    pendingPost = undefined;
+    pending = undefined;
     form.reset();
     status.textContent = saved ? "留言已发送。" : "留言已发送。请在离开本页前删除，浏览器无法保存删除权限。";
   } catch (error) {
     console.error("Could not publish comment", error);
     status.textContent = "发送失败，留言已保留。请重试。";
-  } finally {
-    send.disabled = false;
-    message.readOnly = false;
   }
+  send.disabled = false;
+  message.readOnly = false;
 }
 
 if (endpoint) {
-  form.addEventListener("submit", publishComment);
+  form.addEventListener("submit", sendComment);
   more.addEventListener("click", loadComments);
   scrollArea.addEventListener("scroll", () => {
     const remaining = scrollArea.scrollHeight - scrollArea.scrollTop - scrollArea.clientHeight;
-    if (nextCursor && loadState === "idle" && remaining <= 40) loadComments();
+    if (nextCursor && loadOnScroll && !more.disabled && remaining <= 40) loadComments();
   }, { passive: true });
   loadComments();
 } else {

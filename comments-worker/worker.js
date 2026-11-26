@@ -7,8 +7,8 @@ const timestampPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
 const publicColumns = "id, body, created_at AS createdAt";
 
 async function readPayload(request) {
-  const type = request.headers.get("Content-Type")?.split(";")[0].trim();
-  if (type !== "application/json" || !request.body) return null;
+  const contentType = request.headers.get("Content-Type") || "";
+  if (contentType.split(";", 1)[0].trim() !== "application/json" || !request.body) return null;
 
   const reader = request.body.getReader();
   const decoder = new TextDecoder();
@@ -31,6 +31,10 @@ async function readPayload(request) {
   }
 }
 
+function isDeleteKey(key) {
+  return typeof key === "string" && deleteKeyPattern.test(key);
+}
+
 async function hashDeleteKey(deleteKey) {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(deleteKey));
   return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
@@ -38,37 +42,35 @@ async function hashDeleteKey(deleteKey) {
 
 async function listComments(db, url, json) {
   const before = url.searchParams.get("before");
-  let cursorFilter = "";
-  const queryValues = [];
+  let where = "";
+  const params = [pageSize + 1];
   if (before !== null) {
     const [createdAt, id, extra] = before.split("/");
     if (!timestampPattern.test(createdAt) || !commentIdPattern.test(id) || extra !== undefined) {
       return json({ error: "invalid_cursor" }, 400);
     }
-    cursorFilter = " WHERE (created_at, id) < (?, ?)";
-    queryValues.push(createdAt, id);
+    where = " WHERE (created_at, id) < (?, ?)";
+    params.unshift(createdAt, id);
   }
 
   const { results } = await db.prepare(
-    `SELECT ${publicColumns} FROM tutorial_comments${cursorFilter}
+    `SELECT ${publicColumns} FROM tutorial_comments${where}
      ORDER BY created_at DESC, id DESC LIMIT ?`,
-  ).bind(...queryValues, pageSize + 1).all();
+  ).bind(...params).all();
   const comments = results.slice(0, pageSize);
-  const last = comments.at(-1);
+  const last = comments[pageSize - 1];
   const nextCursor = results.length > pageSize ? `${last.createdAt}/${last.id}` : null;
   return json({ comments, nextCursor });
 }
 
 async function publishComment(db, request, json) {
-  const data = await readPayload(request);
-  const body = typeof data?.body === "string" ? data.body.trim() : "";
-  if (typeof data?.id !== "string" || !commentIdPattern.test(data.id) ||
-      typeof data.deleteKey !== "string" || !deleteKeyPattern.test(data.deleteKey) ||
+  const { id, deleteKey, body: text } = (await readPayload(request)) || {};
+  const body = typeof text === "string" ? text.trim() : "";
+  if (typeof id !== "string" || !commentIdPattern.test(id) || !isDeleteKey(deleteKey) ||
       !body || body.length > maxCommentLength) {
     return json({ error: "invalid_comment" }, 400);
   }
 
-  const { id, deleteKey } = data;
   const hash = await hashDeleteKey(deleteKey);
   const createdAt = new Date().toISOString();
   const result = await db.prepare(
@@ -80,20 +82,20 @@ async function publishComment(db, request, json) {
   const existing = await db.prepare(
     `SELECT ${publicColumns} FROM tutorial_comments WHERE id = ? AND delete_key_hash = ?`,
   ).bind(id, hash).first();
-  if (existing?.body === body) return json({ comment: existing });
+  if (existing && existing.body === body) return json({ comment: existing });
   return json({ error: "comment_conflict" }, 409);
 }
 
-async function removeComment(db, request, id, headers, json) {
-  const data = await readPayload(request);
-  if (typeof data?.deleteKey !== "string" || !deleteKeyPattern.test(data.deleteKey)) {
+async function removeComment(db, request, id, json) {
+  const { deleteKey } = (await readPayload(request)) || {};
+  if (!isDeleteKey(deleteKey)) {
     return json({ error: "invalid_delete_key" }, 400);
   }
 
-  const hash = await hashDeleteKey(data.deleteKey);
+  const hash = await hashDeleteKey(deleteKey);
   const result = await db.prepare("DELETE FROM tutorial_comments WHERE id = ? AND delete_key_hash = ?")
     .bind(id, hash).run();
-  if (result.meta.changes) return new Response(null, { status: 204, headers });
+  if (result.meta.changes) return json(null, 204);
 
   const existing = await db.prepare("SELECT id FROM tutorial_comments WHERE id = ?").bind(id).first();
   return existing ? json({ error: "forbidden" }, 403) : json({ error: "comment_not_found" }, 404);
@@ -102,33 +104,38 @@ async function removeComment(db, request, id, headers, json) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const method = request.method;
     const origin = request.headers.get("Origin");
     const headers = new Headers({
       "Cache-Control": "no-store",
       "X-Content-Type-Options": "nosniff",
       "Vary": "Origin",
     });
-    const json = (body, status = 200) => Response.json(body, { status, headers });
+    function json(body, status = 200) {
+      if (status === 204) return new Response(null, { status, headers });
+      return Response.json(body, { status, headers });
+    }
+
     if (origin && origin !== env.SITE_ORIGIN) return json({ error: "forbidden_origin" }, 403);
-    if (!origin && request.method !== "GET") return json({ error: "forbidden_origin" }, 403);
+    if (!origin && method !== "GET") return json({ error: "forbidden_origin" }, 403);
     if (origin) headers.set("Access-Control-Allow-Origin", origin);
 
     const collection = url.pathname === "/comments";
     const id = url.pathname.startsWith("/comments/") ? url.pathname.slice("/comments/".length) : "";
     if (!collection && !commentIdPattern.test(id)) return json({ error: "not_found" }, 404);
 
-    if (request.method === "OPTIONS") {
+    if (method === "OPTIONS") {
       headers.set("Access-Control-Allow-Methods", collection ? "GET, POST, OPTIONS" : "DELETE, OPTIONS");
       headers.set("Access-Control-Allow-Headers", "Content-Type");
       headers.set("Access-Control-Max-Age", "600");
-      return new Response(null, { status: 204, headers });
+      return json(null, 204);
     }
 
     try {
-      if (collection && request.method === "GET") return await listComments(env.COMMENTS, url, json);
-      if (collection && request.method === "POST") return await publishComment(env.COMMENTS, request, json);
-      if (!collection && request.method === "DELETE") {
-        return await removeComment(env.COMMENTS, request, id, headers, json);
+      if (collection && method === "GET") return await listComments(env.COMMENTS, url, json);
+      if (collection && method === "POST") return await publishComment(env.COMMENTS, request, json);
+      if (!collection && method === "DELETE") {
+        return await removeComment(env.COMMENTS, request, id, json);
       }
       return json({ error: "method_not_allowed" }, 405);
     } catch {
