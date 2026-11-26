@@ -38,18 +38,21 @@ async function hashDeleteKey(deleteKey) {
 
 async function listComments(db, url, json) {
   const before = url.searchParams.get("before");
-  const select = `SELECT ${publicColumns} FROM tutorial_comments`;
-  const order = "ORDER BY created_at DESC, id DESC LIMIT ?";
-  let query = db.prepare(`${select} ${order}`).bind(pageSize + 1);
+  let cursorFilter = "";
+  const queryValues = [];
   if (before !== null) {
     const [createdAt, id, extra] = before.split("/");
     if (!timestampPattern.test(createdAt) || !commentIdPattern.test(id) || extra !== undefined) {
       return json({ error: "invalid_cursor" }, 400);
     }
-    query = db.prepare(`${select} WHERE (created_at, id) < (?, ?) ${order}`).bind(createdAt, id, pageSize + 1);
+    cursorFilter = " WHERE (created_at, id) < (?, ?)";
+    queryValues.push(createdAt, id);
   }
 
-  const { results } = await query.all();
+  const { results } = await db.prepare(
+    `SELECT ${publicColumns} FROM tutorial_comments${cursorFilter}
+     ORDER BY created_at DESC, id DESC LIMIT ?`,
+  ).bind(...queryValues, pageSize + 1).all();
   const comments = results.slice(0, pageSize);
   const last = comments.at(-1);
   const nextCursor = results.length > pageSize ? `${last.createdAt}/${last.id}` : null;
