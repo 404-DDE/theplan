@@ -22,7 +22,8 @@ const temporaryKeys = new Map();
 const entries = new Map();
 const dateFormat = new Intl.DateTimeFormat("en-GB", { dateStyle: "short", timeStyle: "medium", hour12: false });
 let nextCursor = "";
-let loadFailed = false;
+let loadState = "idle";
+let hasLoadedFirstPage = false;
 let pendingComment;
 
 function readKey(id) {
@@ -107,17 +108,19 @@ function addComment(comment, prepend = false) {
 }
 
 async function loadComments() {
-  if (more.disabled) return;
+  if (loadState === "loading") return;
+
+  loadState = "loading";
   more.disabled = true;
-  if (nextCursor) {
-    more.textContent = "正在加载留言…";
-  } else {
-    status.textContent = "正在加载留言…";
-    more.hidden = true;
-  }
+
+  const before = nextCursor;
+  const progress = before ? more : status;
+  progress.textContent = "正在加载留言…";
+  if (!before) more.hidden = true;
+
   try {
     const url = new URL(endpoint);
-    if (nextCursor) url.searchParams.set("before", nextCursor);
+    if (before) url.searchParams.set("before", before);
     const response = await requestComments(url);
     if (!response.ok) throw new Error("Load failed");
 
@@ -125,16 +128,18 @@ async function loadComments() {
     nextCursor = page.nextCursor;
     for (const comment of page.comments) addComment(comment);
     updateCount();
-    loadFailed = false;
+
     more.textContent = "更早的留言";
     more.hidden = !nextCursor;
-    if (form.hidden) {
+    if (!hasLoadedFirstPage) {
       form.hidden = false;
       status.textContent = entries.size ? "" : "还没有留言。";
+      hasLoadedFirstPage = true;
     }
+    loadState = "idle";
   } catch {
-    loadFailed = true;
-    if (form.hidden) status.textContent = "加载失败，请重试。";
+    loadState = "failed";
+    if (!hasLoadedFirstPage) status.textContent = "加载失败，请重试。";
     more.textContent = "重试加载留言";
     more.hidden = false;
   } finally {
@@ -191,7 +196,7 @@ if (endpoint) {
   more.addEventListener("click", loadComments);
   scrollArea.addEventListener("scroll", () => {
     const remaining = scrollArea.scrollHeight - scrollArea.scrollTop - scrollArea.clientHeight;
-    if (nextCursor && !loadFailed && remaining <= 40) loadComments();
+    if (nextCursor && loadState === "idle" && remaining <= 40) loadComments();
   }, { passive: true });
   loadComments();
 } else {
