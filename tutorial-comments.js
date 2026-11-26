@@ -23,7 +23,7 @@ const dateFormat = new Intl.DateTimeFormat("en-GB", { dateStyle: "short", timeSt
 let nextCursor = "";
 let loadState = "idle";
 let hasLoadedFirstPage = false;
-let pendingComment;
+let pendingSubmission;
 
 function readKey(id) {
   try {
@@ -152,6 +152,27 @@ async function loadComments() {
   }
 }
 
+async function postComment(body) {
+  // Retry the same unconfirmed post with its original ID to avoid a duplicate.
+  if (pendingSubmission?.body !== body) {
+    const bytes = crypto.getRandomValues(new Uint8Array(32));
+    const deleteKey = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+    pendingSubmission = { id: crypto.randomUUID(), deleteKey, body };
+  }
+
+  const submission = pendingSubmission;
+  const saved = saveKey(submission.id, submission.deleteKey);
+  const response = await requestComments(endpoint, "POST", submission);
+  if (response.status === 409) {
+    forgetKey(submission.id);
+    pendingSubmission = undefined;
+  }
+  checkResponse(response);
+
+  const { comment } = await response.json();
+  return { comment, saved };
+}
+
 async function publishComment(event) {
   event.preventDefault();
   if (send.disabled) return;
@@ -165,25 +186,11 @@ async function publishComment(event) {
   message.readOnly = true;
   status.textContent = "正在发送留言…";
   try {
-    if (pendingComment?.body !== body) {
-      const bytes = crypto.getRandomValues(new Uint8Array(32));
-      const deleteKey = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
-      pendingComment = { id: crypto.randomUUID(), deleteKey, body };
-    }
-
-    const saved = saveKey(pendingComment.id, pendingComment.deleteKey);
-    const response = await requestComments(endpoint, "POST", pendingComment);
-    if (response.status === 409) {
-      forgetKey(pendingComment.id);
-      pendingComment = undefined;
-    }
-    checkResponse(response);
-
-    const { comment } = await response.json();
+    const { comment, saved } = await postComment(body);
     addComment(comment, true);
     scrollArea.scrollTop = 0;
     updateCount();
-    pendingComment = undefined;
+    pendingSubmission = undefined;
     form.reset();
     status.textContent = saved ? "留言已发送。" : "留言已发送。请在离开本页前删除，浏览器无法保存删除权限。";
   } catch (error) {
