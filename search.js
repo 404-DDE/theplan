@@ -1,6 +1,6 @@
-const searchForm = document.querySelector("#f1");
-const searchInput = document.querySelector("#q");
-const searchStatus = document.querySelector("#st");
+const searchForm = document.querySelector("form[role='search']");
+const searchInput = searchForm.querySelector("input[type='search']");
+const searchStatus = searchForm.querySelector("[role='status']");
 const guide = document.querySelector("#guide");
 
 const searchRoutes = [
@@ -17,7 +17,7 @@ const searchRoutes = [
   { queries: ["persona"], href: "./persona.html" },
 ];
 
-document.querySelector("#gbtn").addEventListener("click", () => guide.showModal());
+document.querySelector(".nav [aria-haspopup='dialog']").addEventListener("click", () => guide.showModal());
 
 searchForm.addEventListener("submit", (event) => {
   event.preventDefault();

@@ -246,7 +246,7 @@ body {
   margin-block-start: clamp(14px, calc(32 * var(--art-px)), 32px);
 }
 
-#cmore {
+.cscroll > button {
   overflow-anchor: none;
 }
 
