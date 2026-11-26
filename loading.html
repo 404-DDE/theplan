@@ -4,19 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ThePlan — 読み込み中</title>
-  <link rel="stylesheet" href="./search.css">
+  <link rel="stylesheet" href="./search.css?v=2">
   <link rel="prefetch" href="./tutorial.html" as="document">
-  <link rel="prefetch" href="./tutorial.css?v=explore-links-1" as="style">
+  <link rel="prefetch" href="./tutorial.css?v=2" as="style">
   <link rel="preload" href="./assets/P3_mobile.png" as="image" media="(max-width: 740px)" fetchpriority="high">
   <link rel="preload" href="./assets/P3_bg.png" as="image" media="not all and (max-width: 740px)" fetchpriority="high">
   <link rel="preload" href="./assets/WEBGIF1-poster.png" as="image">
   <script src="./loading.js" defer></script>
-  <!-- 2秒好像有些长了...可能js修改到1秒会好些? -->
 </head>
-<body class="loading-page">
+<body class="load">
   <main role="status">
-    <span class="visually-hidden">読み込み中</span>
-    <img class="spinner" src="./assets/P2_loading.png" width="80" height="80" alt="">
+    <span class="hid">読み込み中</span>
+    <img class="spin" src="./assets/P2_loading.png" width="80" height="80" alt="">
     <noscript><a href="./tutorial.html">チュートリアルへ</a></noscript>
   </main>
 </body>

@@ -1,13 +1,13 @@
-const section = document.querySelector("#tutorial-comments");
+const section = document.querySelector("#cbox");
 const endpoint = section.dataset.apiUrl;
-const scrollArea = document.querySelector("#comment-scroll");
-const list = document.querySelector("#comment-list");
-const count = document.querySelector("#comment-count");
-const form = document.querySelector("#comment-form");
-const message = document.querySelector("#comment-message");
+const scrollArea = document.querySelector("#cscr");
+const list = document.querySelector("#cl");
+const count = document.querySelector("#ccnt");
+const form = document.querySelector("#cf");
+const message = document.querySelector("#cm");
 const send = form.querySelector("button[type='submit']");
-const more = document.querySelector("#more-comments");
-const status = document.querySelector("#comment-status");
+const more = document.querySelector("#cmore");
+const status = document.querySelector("#cs");
 const storagePrefix = "theplan:tutorial-comment:";
 const temporaryKeys = new Map();
 const entries = new Map();
@@ -39,7 +39,6 @@ function forgetKey(id) {
   try {
     localStorage.removeItem(storagePrefix + id);
   } catch {
-    // The browser may have disabled access to storage.
   }
 }
 
@@ -79,20 +78,20 @@ async function deleteComment(id, button) {
 function addComment(comment, prepend = false) {
   if (entries.has(comment.id)) return;
   const entry = document.createElement("li");
-  entry.className = "comment-entry";
+  entry.className = "cent";
 
   const star = document.createElement("span");
-  star.className = "comment-star";
+  star.className = "cstar";
   star.setAttribute("aria-hidden", "true");
   star.textContent = "★";
 
   const line = document.createElement("div");
   const text = document.createElement("span");
-  text.className = "comment-text";
+  text.className = "ctext";
   text.textContent = comment.body;
 
   const time = document.createElement("time");
-  time.className = "comment-time";
+  time.className = "ctime";
   time.dateTime = comment.createdAt;
   time.textContent = dateFormat.format(new Date(comment.createdAt));
   line.append(text, time);
@@ -100,7 +99,7 @@ function addComment(comment, prepend = false) {
   if (readKey(comment.id)) {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "comment-action";
+    button.className = "cact";
     button.textContent = "删除";
     button.addEventListener("click", () => deleteComment(comment.id, button));
     line.append(button);

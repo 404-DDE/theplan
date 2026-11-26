@@ -1,4 +1,4 @@
-const backdrop = document.querySelector(".tutorial-backdrop");
+const backdrop = document.querySelector(".bg");
 const [intro, firstStep, ...finalSteps] = document.querySelectorAll("[data-animation]");
 
 async function playAnimation(poster) {
@@ -13,7 +13,7 @@ async function playAnimation(poster) {
     }
 
     if (source === poster.dataset.fallback) {
-      poster.classList.remove("tutorial-gif-cropped");
+      poster.classList.remove("cut");
       poster.width = 1920;
       poster.height = 1080;
     }

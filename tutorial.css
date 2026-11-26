@@ -13,7 +13,7 @@ body {
   margin: 0;
 }
 
-.visually-hidden {
+.hid {
   position: absolute;
   inline-size: 1px;
   block-size: 1px;
@@ -24,7 +24,7 @@ body {
   white-space: nowrap;
 }
 
-.tutorial-site {
+.page {
   position: relative;
   container-type: inline-size;
   max-inline-size: 2338px;
@@ -36,12 +36,12 @@ body {
 }
 
 @supports (width: 1cqw) {
-  .tutorial-site {
+  .page {
     --art-width: 100cqw;
   }
 }
 
-.tutorial-canvas {
+.main {
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -51,7 +51,7 @@ body {
   background: #000;
 }
 
-.tutorial-backdrop {
+.bg {
   position: absolute;
   z-index: -1;
   top: calc(-147 * var(--art-px));
@@ -61,30 +61,28 @@ body {
   pointer-events: none;
 }
 
-.tutorial-filters,
-.tutorial-gif {
+.filt,
+.gif {
   position: absolute;
 }
 
-.tutorial-gif {
+.gif {
   left: calc(var(--gif-x) * var(--art-px));
   top: calc(var(--gif-y) * var(--art-px));
   width: calc(var(--gif-width, 1920) * var(--art-px));
   height: auto;
-  /* Soften the transparent contour while preserving the drawing inside it. */
-  filter: url("#soft-gif-edge");
+  filter: url("#softedge");
   pointer-events: none;
 }
 
-.tutorial-gif-cropped {
+.cut {
   inset: 0;
   width: 100%;
   height: 100%;
-  /* The cropped frames already have the soft edge. */
   filter: none;
 }
 
-.tutorial-intro {
+.gif0 {
   --gif-x: calc(209 - var(--side-crop));
   --gif-y: 467;
 }
@@ -97,7 +95,7 @@ body {
   height: max(44px, calc(142 * var(--art-px)));
 }
 
-.step {
+.s {
   position: absolute;
   left: calc((637 - var(--side-crop)) * var(--art-px));
   top: calc(var(--step-y) * var(--art-px));
@@ -105,14 +103,14 @@ body {
   scroll-margin-top: 16px;
 }
 
-.step-one {
+.s1 {
   --step-y: 1304;
   --title-height: 93;
   --gif-x: -421;
   --gif-y: -173;
 }
 
-.step-two {
+.s2 {
   --step-y: 2305;
   --title-height: 167;
   --gif-x: -403;
@@ -120,7 +118,7 @@ body {
   --gif-width: 1859;
 }
 
-.step-three {
+.s3 {
   --step-y: 3390;
   --title-height: 99;
   --gif-x: -491;
@@ -128,34 +126,32 @@ body {
   --gif-width: 1999;
 }
 
-/* Reuse the headings and framed backgrounds from the supplied layout. */
-.step-title,
-.step-frame {
+.ttl,
+.frame {
   background-image: url("./assets/P3_preview.png");
   background-repeat: no-repeat;
   background-size: calc(2338 * var(--art-px)) auto;
 }
 
-.step-title {
+.ttl {
   margin: 0;
   height: calc(var(--title-height) * var(--art-px));
   background-position: calc(-637 * var(--art-px)) calc(-1 * var(--step-y) * var(--art-px));
 }
 
-.step-frame {
+.frame {
   position: relative;
   height: calc(629 * var(--art-px));
   background-position: calc(-637 * var(--art-px)) calc(-1 * (var(--step-y) + var(--title-height)) * var(--art-px));
 }
 
-.step-window {
+.win {
   position: absolute;
-  /* Crop the GIFs to the inside of the green frames in the artwork. */
   inset: calc(11 * var(--art-px));
   overflow: hidden;
 }
 
-.thread-footer {
+.ft {
   margin-inline-start: calc((453 - var(--side-crop)) * var(--art-px));
   width: calc(1433 * var(--art-px));
   padding-inline: calc(13 * var(--art-px)) calc(15 * var(--art-px));
@@ -166,17 +162,17 @@ body {
   line-height: 1.25;
 }
 
-.thread-date,
-.thread-meta {
+.date,
+.meta {
   margin: 0;
   padding-inline: calc(8 * var(--art-px));
 }
 
-.thread-date {
+.date {
   min-height: calc(48 * var(--art-px));
 }
 
-.thread-meta {
+.meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -184,12 +180,12 @@ body {
   color: #424242;
 }
 
-.reply-arrow {
+.arw {
   font-size: 1.15em;
   line-height: 1;
 }
 
-.comment-icon {
+.ci {
   position: relative;
   display: inline-block;
   width: .86em;
@@ -200,7 +196,7 @@ body {
   background: currentColor;
 }
 
-.comment-icon::after {
+.ci::after {
   position: absolute;
   bottom: -.13em;
   left: .21em;
@@ -211,16 +207,16 @@ body {
   content: "";
 }
 
-.comment-count {
+.cc {
   color: #a93c00;
   margin-inline-end: .2em;
 }
 
-.comment-count:empty {
+.cc:empty {
   display: none;
 }
 
-.comment-prompt {
+.cprompt {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -232,13 +228,13 @@ body {
   font-weight: 400;
 }
 
-.comment-panel {
+.cpanel {
   padding: clamp(14px, calc(42 * var(--art-px)), 42px) clamp(14px, calc(74 * var(--art-px)), 74px) 0;
   font-size: clamp(1rem, calc(26 * var(--art-px)), 1.25rem);
   line-height: 1.5;
 }
 
-.comment-scroll {
+.cscroll {
   --comment-row-height: 1.75em;
   max-block-size: calc(10 * var(--comment-row-height));
   overflow-y: auto;
@@ -246,21 +242,21 @@ body {
   scrollbar-gutter: stable;
 }
 
-.comment-form:not([hidden]) ~ .comment-scroll {
+.cform:not([hidden]) ~ .cscroll {
   margin-block-start: clamp(14px, calc(32 * var(--art-px)), 32px);
 }
 
-#more-comments {
+#cmore {
   overflow-anchor: none;
 }
 
-.comment-list {
+.clist {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.comment-entry {
+.cent {
   display: flex;
   gap: .35em;
   min-block-size: var(--comment-row-height);
@@ -268,30 +264,30 @@ body {
   overflow-wrap: anywhere;
 }
 
-.comment-star,
-.comment-time,
-.comment-status {
+.cstar,
+.ctime,
+.cstat {
   color: #495669;
 }
 
-.comment-text {
+.ctext {
   color: #0645cf;
   white-space: pre-wrap;
 }
 
-.comment-time {
+.ctime {
   margin-inline-start: .55em;
   font-size: .8em;
   white-space: nowrap;
 }
 
-.comment-action,
-.comment-send {
+.cact,
+.csend {
   font: inherit;
   cursor: pointer;
 }
 
-.comment-action {
+.cact {
   border: 0;
   padding: .35em .45em;
   color: #385763;
@@ -300,21 +296,21 @@ body {
   text-decoration: underline;
 }
 
-.comment-entry .comment-action {
+.cent .cact {
   margin-inline-start: .35em;
   padding-block: .15em;
 }
 
-.comment-form {
+.cform {
   display: grid;
   gap: 8px;
 }
 
-.comment-form[hidden] {
+.cform[hidden] {
   display: none;
 }
 
-.comment-form textarea {
+.cform textarea {
   width: 100%;
   min-height: 100px;
   resize: vertical;
@@ -326,11 +322,11 @@ body {
   font: inherit;
 }
 
-.comment-form textarea::placeholder {
+.cform textarea::placeholder {
   color: #4d6c75;
 }
 
-.comment-send {
+.csend {
   justify-self: end;
   min-height: 42px;
   border: 0;
@@ -339,33 +335,33 @@ body {
   background: #506f76;
 }
 
-.comment-panel button:disabled {
+.cpanel button:disabled {
   opacity: .62;
   cursor: wait;
 }
 
-.comment-panel :focus-visible {
+.cpanel :focus-visible {
   outline: 2px solid #211b7e;
   outline-offset: 2px;
 }
 
-.comment-status {
+.cstat {
   margin: 0;
   font-size: .9em;
 }
 
-.comment-status:not(:empty) {
+.cstat:not(:empty) {
   margin-block-start: .55em;
 }
 
-.thread-pages {
+.pages {
   display: flex;
   justify-content: space-between;
   padding-inline: calc(115 * var(--art-px));
   margin-block-start: calc(76 * var(--art-px));
 }
 
-.pager-button {
+.pg {
   display: grid;
   place-items: center;
   min-width: calc(148 * var(--art-px));
@@ -376,7 +372,7 @@ body {
   font-weight: 600;
 }
 
-.current-page {
+.cur {
   min-width: calc(50 * var(--art-px));
   font-weight: 400;
 }
@@ -386,23 +382,23 @@ a:focus-visible {
   outline-offset: 3px;
 }
 
-.sidebars {
+.sides {
   display: contents;
 }
 
-.sidebar {
+.side {
   position: absolute;
   top: calc(240 * var(--art-px));
 }
 
-.sidebar h2 {
+.side h2 {
   margin: 0;
   font-size: calc(36 * var(--art-px));
   line-height: calc(47 * var(--art-px));
   letter-spacing: .045em;
 }
 
-.explore {
+.sideL {
   left: calc(145 * var(--art-px));
   width: calc(307 * var(--art-px));
   text-align: center;
@@ -411,7 +407,7 @@ a:focus-visible {
   line-height: calc(38 * var(--art-px));
 }
 
-.explore ul {
+.sideL ul {
   position: relative;
   margin: 0;
   list-style: none;
@@ -419,36 +415,36 @@ a:focus-visible {
   border-top: max(1px, calc(2 * var(--art-px))) dashed currentColor;
 }
 
-.explore .explore-primary {
+.sideL .lnk1 {
   margin-top: calc(37 * var(--art-px));
   padding-top: calc(3 * var(--art-px));
 }
 
-.explore-primary::before {
+.lnk1::before {
   position: absolute;
   left: -.32em;
   top: -1.05em;
   content: "：";
 }
 
-.explore .explore-secondary {
+.sideL .lnk2 {
   margin-top: calc(19 * var(--art-px));
   padding-top: calc(14 * var(--art-px));
 }
 
-.explore-link {
+.lnk {
   color: inherit;
   text-decoration: none;
 }
 
 @media (hover: hover) {
-  .explore-link:hover {
+  .lnk:hover {
     color: #5b8cff;
     text-decoration: underline;
   }
 }
 
-.headlines {
+.sideR {
   left: calc(1896 * var(--art-px));
   width: calc(311 * var(--art-px));
   color: #eeefe7;
@@ -458,83 +454,82 @@ a:focus-visible {
   overflow-wrap: anywhere;
 }
 
-.headlines p {
+.sideR p {
   margin: 0 0 calc(34 * var(--art-px));
 }
 
 @media (max-width: 740px) {
-  .tutorial-site {
+  .page {
     --layout-width: 1433;
     --side-crop: 453;
   }
 
-  .tutorial-canvas {
+  .main {
     background-color: var(--tutorial-paper);
   }
 
-  .tutorial-backdrop {
+  .bg {
     top: 0;
   }
 
-  .step-title,
-  .step-frame {
-    /* The mobile backdrop includes the titles and frames. */
+  .ttl,
+  .frame {
     background-image: none;
   }
 
-  .thread-footer {
+  .ft {
     font-size: max(13px, calc(34 * var(--art-px)));
   }
 
-  .thread-date,
-  .thread-meta,
-  .comment-prompt {
+  .date,
+  .meta,
+  .cprompt {
     min-height: 25px;
   }
 
-  .thread-pages {
+  .pages {
     margin-block-start: 20px;
   }
 
-  .pager-button {
+  .pg {
     min-height: 44px;
     min-width: 55px;
   }
 
-  .current-page {
+  .cur {
     min-width: 44px;
   }
 
-  .sidebars {
+  .sides {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 18px;
     padding: 24px 16px;
   }
 
-  .sidebar {
+  .side {
     position: static;
     width: auto;
     font-size: 14px;
     line-height: 1.45;
   }
 
-  .sidebar h2 {
+  .side h2 {
     font-size: 18px;
     line-height: 1.6;
   }
 
-  .explore .explore-primary,
-  .explore .explore-secondary {
+  .sideL .lnk1,
+  .sideL .lnk2 {
     margin-top: 10px;
     padding-top: 7px;
   }
 
-  .explore-primary::before {
+  .lnk1::before {
     display: none;
   }
 
-  .headlines p {
+  .sideR p {
     margin-bottom: 14px;
   }
 }

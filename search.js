@@ -1,6 +1,6 @@
-const searchForm = document.querySelector("#thread-search");
-const searchInput = document.querySelector("#query");
-const searchStatus = document.querySelector("#search-status");
+const searchForm = document.querySelector("#f1");
+const searchInput = document.querySelector("#q");
+const searchStatus = document.querySelector("#st");
 const guide = document.querySelector("#guide");
 const transportationQueries = new Set([
   "how aliens travel",
@@ -9,7 +9,7 @@ const transportationQueries = new Set([
   "aliens vehicles",
 ]);
 
-document.querySelector("#open-guide").addEventListener("click", () => guide.showModal());
+document.querySelector("#gbtn").addEventListener("click", () => guide.showModal());
 
 searchForm.addEventListener("submit", (event) => {
   event.preventDefault();

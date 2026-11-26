@@ -74,7 +74,6 @@ async function publishComment(db, request, json) {
   ).bind(id, body, createdAt, hash).run();
   if (result.meta.changes) return json({ comment: { id, body, createdAt } }, 201);
 
-  // A duplicate submission after a network error returns the existing comment.
   const existing = await db.prepare(
     `SELECT ${publicColumns} FROM tutorial_comments WHERE id = ? AND delete_key_hash = ?`,
   ).bind(id, hash).first();
