@@ -85,8 +85,10 @@ body {
 }
 
 .tutorial-step {
+  /* The step column and its background crops start at the same x in the artwork. */
+  --step-x: 637;
   position: absolute;
-  left: calc((637 - var(--side-crop)) * var(--art-px));
+  left: calc((var(--step-x) - var(--side-crop)) * var(--art-px));
   top: calc(var(--step-y) * var(--art-px));
   width: calc(1067 * var(--art-px));
   scroll-margin-top: 16px;
@@ -125,13 +127,13 @@ body {
 .step-title {
   margin: 0;
   height: calc(var(--title-height) * var(--art-px));
-  background-position: calc(-637 * var(--art-px)) calc(-1 * var(--step-y) * var(--art-px));
+  background-position: calc(-1 * var(--step-x) * var(--art-px)) calc(-1 * var(--step-y) * var(--art-px));
 }
 
 .frame {
   position: relative;
   height: calc(629 * var(--art-px));
-  background-position: calc(-637 * var(--art-px)) calc(-1 * (var(--step-y) + var(--title-height)) * var(--art-px));
+  background-position: calc(-1 * var(--step-x) * var(--art-px)) calc(-1 * (var(--step-y) + var(--title-height)) * var(--art-px));
 }
 
 .animation-window {
