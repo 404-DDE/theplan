@@ -8,6 +8,15 @@ const message = document.querySelector("#cm");
 const send = form.querySelector("button[type='submit']");
 const more = document.querySelector("#cmore");
 const status = document.querySelector("#cs");
+
+const commentTemplate = document.createElement("template");
+commentTemplate.innerHTML = `
+  <li class="cent">
+    <span class="cstar" aria-hidden="true">★</span>
+    <div><span class="ctext"></span><time class="ctime"></time><button type="button" class="cact">删除</button></div>
+  </li>
+`;
+
 const storagePrefix = "theplan:tutorial-comment:";
 const temporaryKeys = new Map();
 const entries = new Map();
@@ -77,35 +86,21 @@ async function deleteComment(id, button) {
 
 function addComment(comment, prepend = false) {
   if (entries.has(comment.id)) return;
-  const entry = document.createElement("li");
-  entry.className = "cent";
 
-  const star = document.createElement("span");
-  star.className = "cstar";
-  star.setAttribute("aria-hidden", "true");
-  star.textContent = "★";
+  const entry = commentTemplate.content.firstElementChild.cloneNode(true);
+  entry.querySelector(".ctext").textContent = comment.body;
 
-  const line = document.createElement("div");
-  const text = document.createElement("span");
-  text.className = "ctext";
-  text.textContent = comment.body;
-
-  const time = document.createElement("time");
-  time.className = "ctime";
+  const time = entry.querySelector(".ctime");
   time.dateTime = comment.createdAt;
   time.textContent = dateFormat.format(new Date(comment.createdAt));
-  line.append(text, time);
 
+  const deleteButton = entry.querySelector("button");
   if (readKey(comment.id)) {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "cact";
-    button.textContent = "删除";
-    button.addEventListener("click", () => deleteComment(comment.id, button));
-    line.append(button);
+    deleteButton.addEventListener("click", () => deleteComment(comment.id, deleteButton));
+  } else {
+    deleteButton.remove();
   }
 
-  entry.append(star, line);
   if (prepend) list.prepend(entry);
   else list.append(entry);
   entries.set(comment.id, entry);
