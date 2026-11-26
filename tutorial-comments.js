@@ -1,13 +1,12 @@
-const section = document.querySelector("#comments, section[data-api-url]");
-const endpoint = section.dataset.apiUrl;
-const scrollArea = section.querySelector("[role='region']");
-const list = scrollArea.querySelector("ul");
-const count = document.querySelector("#comment-count, .meta .comment-count");
-const form = section.querySelector("form");
-const message = form.querySelector("textarea");
+const endpoint = document.getElementById("comments").dataset.apiUrl;
+const scrollArea = document.getElementById("comment-scroll-area");
+const list = document.getElementById("comment-list");
+const count = document.getElementById("comment-count");
+const form = document.getElementById("comment-form");
+const message = document.getElementById("comment-message");
 const send = form.querySelector("button[type='submit']");
-const more = scrollArea.querySelector(":scope > button");
-const status = section.querySelector("[role='status']");
+const more = document.getElementById("load-older-comments");
+const status = document.getElementById("comment-status");
 
 const commentTemplate = document.createElement("template");
 commentTemplate.innerHTML = `
