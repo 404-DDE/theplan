@@ -8,8 +8,8 @@ const send = form.querySelector("button[type='submit']");
 const more = document.getElementById("load-older-comments");
 const status = document.getElementById("comment-status");
 
-const commentTemplate = document.createElement("template");
-commentTemplate.innerHTML = `
+const rowTemplate = document.createElement("template");
+rowTemplate.innerHTML = `
   <li class="comment-row">
     <span class="comment-star" aria-hidden="true">★</span>
     <div><span class="comment-text"></span><time class="comment-time"></time><button type="button" class="comment-action">删除</button></div>
@@ -22,8 +22,8 @@ const entries = new Map();
 const dateFormat = new Intl.DateTimeFormat("en-GB", { dateStyle: "short", timeStyle: "medium", hour12: false });
 let nextCursor = "";
 let loadState = "idle";
-let hasLoadedFirstPage = false;
-let pendingSubmission;
+let firstPageLoaded = false;
+let pendingPost;
 
 function readKey(id) {
   try {
@@ -92,7 +92,7 @@ async function deleteComment(id, button) {
 function addComment(comment, { prepend = false } = {}) {
   if (entries.has(comment.id)) return;
 
-  const entry = commentTemplate.content.firstElementChild.cloneNode(true);
+  const entry = rowTemplate.content.firstElementChild.cloneNode(true);
   entry.querySelector(".comment-text").textContent = comment.body;
 
   const time = entry.querySelector(".comment-time");
@@ -135,16 +135,16 @@ async function loadComments() {
 
     more.textContent = "更早的留言";
     more.hidden = !nextCursor;
-    if (!hasLoadedFirstPage) {
+    if (!firstPageLoaded) {
       form.hidden = false;
       status.textContent = entries.size ? "" : "还没有留言。";
-      hasLoadedFirstPage = true;
+      firstPageLoaded = true;
     }
     loadState = "idle";
   } catch (error) {
     console.error("Could not load comments", error);
     loadState = "failed";
-    if (!hasLoadedFirstPage) status.textContent = "加载失败，请重试。";
+    if (!firstPageLoaded) status.textContent = "加载失败，请重试。";
     more.textContent = "重试加载留言";
     more.hidden = false;
   } finally {
@@ -154,18 +154,18 @@ async function loadComments() {
 
 async function postComment(body) {
   // Retry the same unconfirmed post with its original ID to avoid a duplicate.
-  if (pendingSubmission?.body !== body) {
+  if (pendingPost?.body !== body) {
     const bytes = crypto.getRandomValues(new Uint8Array(32));
     const deleteKey = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
-    pendingSubmission = { id: crypto.randomUUID(), deleteKey, body };
+    pendingPost = { id: crypto.randomUUID(), deleteKey, body };
   }
 
-  const submission = pendingSubmission;
-  const saved = saveKey(submission.id, submission.deleteKey);
-  const response = await requestComments(endpoint, "POST", submission);
+  const post = pendingPost;
+  const saved = saveKey(post.id, post.deleteKey);
+  const response = await requestComments(endpoint, "POST", post);
   if (response.status === 409) {
-    forgetKey(submission.id);
-    pendingSubmission = undefined;
+    forgetKey(post.id);
+    pendingPost = undefined;
   }
   checkResponse(response);
 
@@ -190,7 +190,7 @@ async function publishComment(event) {
     addComment(comment, { prepend: true });
     scrollArea.scrollTop = 0;
     updateCount();
-    pendingSubmission = undefined;
+    pendingPost = undefined;
     form.reset();
     status.textContent = saved ? "留言已发送。" : "留言已发送。请在离开本页前删除，浏览器无法保存删除权限。";
   } catch (error) {

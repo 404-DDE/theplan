@@ -2,7 +2,7 @@
   color: #141414;
   background: #000;
   font-family: "Noto Sans CJK JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
-  --tutorial-paper: #f1f4e0;
+  --paper: #f1f4e0;
 }
 
 * {
@@ -16,15 +16,15 @@ body {
 .page {
   position: relative;
   container-type: inline-size;
-  max-inline-size: var(--max-page-width);
+  max-inline-size: var(--max-width);
   margin-inline: auto;
-  --desktop-canvas-width: 2338;
+  --canvas-width: 2338;
   /* Position and width of the middle column on the desktop artwork. */
-  --tutorial-column-x: 453;
-  --tutorial-column-width: 1433;
-  --max-page-width: calc(var(--desktop-canvas-width) * 1px);
-  --art-width: min(100vw, var(--max-page-width));
-  --layout-width: var(--desktop-canvas-width);
+  --column-x: 453;
+  --column-width: 1433;
+  --max-width: calc(var(--canvas-width) * 1px);
+  --art-width: min(100vw, var(--max-width));
+  --layout-width: var(--canvas-width);
   --art-px: calc(var(--art-width) / var(--layout-width));
   --side-crop: 0;
 }
@@ -127,7 +127,7 @@ body {
 .frame {
   background-image: url("./assets/P3_preview.png");
   background-repeat: no-repeat;
-  background-size: calc(var(--desktop-canvas-width) * var(--art-px)) auto;
+  background-size: calc(var(--canvas-width) * var(--art-px)) auto;
 }
 
 .step-title {
@@ -149,11 +149,11 @@ body {
 }
 
 .tutorial-footer {
-  margin-inline-start: calc((var(--tutorial-column-x) - var(--side-crop)) * var(--art-px));
-  width: calc(var(--tutorial-column-width) * var(--art-px));
+  margin-inline-start: calc((var(--column-x) - var(--side-crop)) * var(--art-px));
+  width: calc(var(--column-width) * var(--art-px));
   padding-inline: calc(13 * var(--art-px)) calc(15 * var(--art-px));
   padding-block-end: max(28px, calc(84 * var(--art-px)));
-  background: var(--tutorial-paper);
+  background: var(--paper);
   color: #000;
   font-size: calc(34 * var(--art-px));
   line-height: 1.25;
@@ -232,8 +232,8 @@ body {
 }
 
 .comment-scroll-area {
-  --comment-row-height: 1.75em;
-  max-block-size: calc(10 * var(--comment-row-height));
+  --row-height: 1.75em;
+  max-block-size: calc(10 * var(--row-height));
   overflow-y: auto;
   scrollbar-color: #769da7 transparent;
   scrollbar-gutter: stable;
@@ -256,7 +256,7 @@ body {
 .comment-row {
   display: flex;
   gap: .35em;
-  min-block-size: var(--comment-row-height);
+  min-block-size: var(--row-height);
   padding-block-end: .2em;
   overflow-wrap: anywhere;
 }
@@ -459,12 +459,12 @@ a:focus-visible {
 @media (max-width: 740px) {
   .page {
     /* P3_mobile.png is 1240px wide. Overlay positions use the desktop artwork coordinates. */
-    --layout-width: var(--tutorial-column-width);
-    --side-crop: var(--tutorial-column-x);
+    --layout-width: var(--column-width);
+    --side-crop: var(--column-x);
   }
 
   .main {
-    background-color: var(--tutorial-paper);
+    background-color: var(--paper);
   }
 
   .tutorial-backdrop {

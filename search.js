@@ -1,9 +1,9 @@
-const searchForm = document.querySelector("form[role='search']");
-const searchInput = searchForm.querySelector("input[type='search']");
-const searchStatus = searchForm.querySelector("[role='status']");
+const form = document.querySelector("form[role='search']");
+const input = form.querySelector("input[type='search']");
+const feedback = form.querySelector("[role='status']");
 const guide = document.querySelector("#guide");
 
-const searchRoutes = [
+const routes = [
   { queries: ["alien transformation tutorial"], href: "./loading.html" },
   { queries: ["a real alien", "real alien"], href: "./real-alien.html" },
   {
@@ -19,22 +19,22 @@ const searchRoutes = [
 
 document.querySelector(".nav [aria-haspopup='dialog']").addEventListener("click", () => guide.showModal());
 
-searchForm.addEventListener("submit", (event) => {
+form.addEventListener("submit", (event) => {
   event.preventDefault();
-  const query = searchInput.value.normalize("NFKC").trim().replace(/\s+/g, " ").toLowerCase();
-  const route = searchRoutes.find(({ queries }) => queries.includes(query));
+  const query = input.value.normalize("NFKC").trim().replace(/\s+/g, " ").toLowerCase();
+  const route = routes.find(({ queries }) => queries.includes(query));
 
   if (route) {
     window.location.assign(route.href);
     return;
   }
 
-  searchInput.setAttribute("aria-invalid", "true");
-  searchStatus.textContent = "該当するスレッドはありません。";
-  searchInput.focus();
+  input.setAttribute("aria-invalid", "true");
+  feedback.textContent = "該当するスレッドはありません。";
+  input.focus();
 });
 
-searchInput.addEventListener("input", () => {
-  searchInput.removeAttribute("aria-invalid");
-  searchStatus.textContent = "";
+input.addEventListener("input", () => {
+  input.removeAttribute("aria-invalid");
+  feedback.textContent = "";
 });
