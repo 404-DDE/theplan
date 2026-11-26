@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="ThePlan — Alien Transformation Tutorial">
   <title>Alien Transformation Tutorial — ThePlan</title>
-  <link rel="stylesheet" href="./tutorial.css?v=3">
-  <script type="module" src="./tutorial-media.js?v=2"></script>
-  <script type="module" src="./tutorial-comments.js?v=3"></script>
+  <link rel="stylesheet" href="./tutorial.css?v=4">
+  <script type="module" src="./tutorial-media.js?v=3"></script>
+  <script type="module" src="./tutorial-comments.js?v=4"></script>
 </head>
 <body>
-  <svg class="filt" width="0" height="0" aria-hidden="true" focusable="false">
+  <svg class="media-filters" width="0" height="0" aria-hidden="true" focusable="false">
     <filter id="softedge" x="0%" y="0%" width="100%" height="100%"
       primitiveUnits="objectBoundingBox" color-interpolation-filters="sRGB">
       <feGaussianBlur in="SourceAlpha" stdDeviation="0.001 0.0018"/>
@@ -24,79 +24,79 @@
     <main class="main">
       <picture>
         <source media="(max-width: 740px)" srcset="./assets/P3_mobile.png" width="1240" height="3563">
-        <img class="bg" src="./assets/P3_bg.png" width="2338" height="5124" alt="" fetchpriority="high">
+        <img class="tutorial-backdrop" src="./assets/P3_bg.png" width="2338" height="5124" alt="" fetchpriority="high">
       </picture>
       <h1 class="hid">Legit Ali3n Transf4mation <span lang="ja">宇宙人になる方</span></h1>
-      <img class="gif gif0" src="./assets/WEBGIF1-poster.png" width="1920" height="1080"
+      <img class="tutorial-animation intro-animation" src="./assets/WEBGIF1-poster.png" width="1920" height="1080"
         alt="少女と宇宙人が並んでポーズをとる" decoding="async" data-animation="./assets/WEBGIF1.gif">
       <a class="start" href="#sec1" aria-label="スタート" lang="ja"></a>
 
-      <section class="s s1" id="sec1" tabindex="-1">
-        <h2 class="ttl"><span class="hid">STEP 1: Find your team</span></h2>
+      <section class="tutorial-step team-step" id="sec1" tabindex="-1">
+        <h2 class="step-title"><span class="hid">STEP 1: Find your team</span></h2>
         <div class="frame">
-          <div class="win">
-            <img class="gif" src="./assets/WEBGIF2-poster.png" width="1920" height="1080"
+          <div class="animation-window">
+            <img class="tutorial-animation" src="./assets/WEBGIF2-poster.png" width="1920" height="1080"
               alt="ダンスを一緒に踊る仲間を集める" decoding="async" loading="lazy" data-animation="./assets/WEBGIF2.gif">
           </div>
         </div>
       </section>
 
-      <section class="s s2" id="sec2" tabindex="-1">
-        <h2 class="ttl"><span class="hid">STEP 2: Dance together in front of audience!</span></h2>
+      <section class="tutorial-step dance-step" id="sec2" tabindex="-1">
+        <h2 class="step-title"><span class="hid">STEP 2: Dance together in front of audience!</span></h2>
         <div class="frame">
-          <div class="win">
-            <img class="gif cut" src="./assets/WEBGIF3-poster.png" width="1045" height="607"
+          <div class="animation-window">
+            <img class="tutorial-animation cropped-animation" src="./assets/WEBGIF3-poster.png" width="1045" height="607"
               alt="観客の前で仲間と踊る" decoding="async" loading="lazy"
               data-animation="./assets/WEBGIF3.webp" data-fallback="./assets/WEBGIF3.gif">
           </div>
         </div>
       </section>
 
-      <section class="s s3" id="sec3" tabindex="-1">
-        <h2 class="ttl"><span class="hid">STEP 3: Becoming an ALIEN!!!</span></h2>
+      <section class="tutorial-step transformation-step" id="sec3" tabindex="-1">
+        <h2 class="step-title"><span class="hid">STEP 3: Becoming an ALIEN!!!</span></h2>
         <div class="frame">
-          <div class="win">
-            <img class="gif cut" src="./assets/WEBGIF4-poster.png" width="1045" height="607"
+          <div class="animation-window">
+            <img class="tutorial-animation cropped-animation" src="./assets/WEBGIF4-poster.png" width="1045" height="607"
               alt="ステージで宇宙人に変身する" decoding="async" loading="lazy"
               data-animation="./assets/WEBGIF4.webp" data-fallback="./assets/WEBGIF4.gif">
           </div>
         </div>
       </section>
 
-      <footer class="ft" lang="ja">
+      <footer class="tutorial-footer" lang="ja">
         <p class="date">★1 <time datetime="2008-06-05T00:39:39">2008/06/05(木) 00:39:39</time></p>
         <div class="meta">
-          <span class="arw" aria-hidden="true">↶</span>
-          <span><i class="ci" aria-hidden="true"></i><span class="cc" id="comment-count" aria-hidden="true"></span>ID:bogie2001</span>
+          <span class="reply-arrow" aria-hidden="true">↶</span>
+          <span><i class="comment-icon" aria-hidden="true"></i><span class="comment-count" id="comment-count" aria-hidden="true"></span>ID:bogie2001</span>
         </div>
         <section id="comments" aria-labelledby="comments-title" data-api-url="https://theplan-dde-comments.tenacioushill2.chatgpt.site/comments">
-          <h2 class="cprompt" id="comments-title">コメントを投稿する<span aria-hidden="true">✎</span></h2>
-          <div class="cpanel" lang="zh-CN">
+          <h2 class="comment-heading" id="comments-title">コメントを投稿する<span aria-hidden="true">✎</span></h2>
+          <div class="comment-panel" lang="zh-CN">
             <noscript><p>开启 JavaScript 后可以查看和发布留言。</p></noscript>
-            <form class="cform" id="comment-form" method="post" hidden>
+            <form class="comment-form" id="comment-form" method="post" hidden>
               <label class="hid" for="comment-message">留言</label>
               <textarea id="comment-message" rows="4" maxlength="500" placeholder="何か書いてみてね〜" lang="ja" required></textarea>
-              <button class="csend" type="submit" lang="ja">送信<span aria-hidden="true"> ➜</span></button>
+              <button class="comment-send" type="submit" lang="ja">送信<span aria-hidden="true"> ➜</span></button>
             </form>
-            <p class="cstat" id="comment-status" role="status"></p>
-            <div class="cscroll" id="comment-scroll-area" role="region" aria-label="留言列表" tabindex="0">
-              <ul class="clist" id="comment-list" role="list"></ul>
-              <button class="cact" id="load-older-comments" type="button" hidden>更早的留言</button>
+            <p class="comment-status" id="comment-status" role="status"></p>
+            <div class="comment-scroll-area" id="comment-scroll-area" role="region" aria-label="留言列表" tabindex="0">
+              <ul class="comment-list" id="comment-list" role="list"></ul>
+              <button class="comment-action" id="load-older-comments" type="button" hidden>更早的留言</button>
             </div>
           </div>
         </section>
         <nav class="pages" aria-label="ページ">
-          <a class="pg" href="./index.html">戻る</a>
-          <a class="pg cur" href="#top" aria-label="1 ページの先頭" aria-current="page">1</a>
-          <span class="pg" aria-disabled="true">次へ</span>
+          <a class="page-button" href="./index.html">戻る</a>
+          <a class="page-button current-page" href="#top" aria-label="1 ページの先頭" aria-current="page">1</a>
+          <span class="page-button" aria-disabled="true">次へ</span>
         </nav>
       </footer>
     </main>
 
     <div class="sides" lang="ja">
-      <aside class="side sideL" aria-labelledby="explore-title">
+      <aside class="side explore-sidebar" aria-labelledby="explore-title">
         <h2 id="explore-title">探検</h2>
-        <ul class="lnk1">
+        <ul class="explore-links-primary">
           <li>ニュース速報</li>
           <li>ポケモン</li>
           <li>ペルソナ4</li>
@@ -104,23 +104,23 @@
           <li>ゴブラン入学ガイド</li>
           <li>フランス観光</li>
         </ul>
-        <ul class="lnk2">
+        <ul class="explore-links-secondary">
           <li>未来人</li>
           <li>宇宙生命</li>
           <li>アニメ</li>
           <li>漫画サロン</li>
-          <li><a class="lnk" href="https://www.youtube.com/watch?v=zIpf5nzUrn0">映画</a></li>
+          <li><a class="sidebar-link" href="https://www.youtube.com/watch?v=zIpf5nzUrn0">映画</a></li>
           <li>ゲーム</li>
           <li>旅行情報</li>
           <li>グルメ情報</li>
           <li>運輸・交通</li>
           <li>麻雀・他</li>
           <li>コンサート</li>
-          <li><a class="lnk" href="https://open.spotify.com/intl-fr/album/1IRP27Q8hYLBMeOQaKGuOd?si=AIegzAGAQTavxTKJUGMBIA">宇宙の序曲</a></li>
+          <li><a class="sidebar-link" href="https://open.spotify.com/intl-fr/album/1IRP27Q8hYLBMeOQaKGuOd?si=AIegzAGAQTavxTKJUGMBIA">宇宙の序曲</a></li>
         </ul>
       </aside>
 
-      <aside class="side sideR" aria-label="ニュース">
+      <aside class="side news-sidebar" aria-label="ニュース">
         <section>
           <h2>ニュース</h2>
           <p>KUMI39&nbsp; 10月から国内40公演を開催する、キービジュアル公開！</p>

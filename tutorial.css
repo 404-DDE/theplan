@@ -51,7 +51,7 @@ body {
   background: #000;
 }
 
-.bg {
+.tutorial-backdrop {
   position: absolute;
   z-index: -1;
   top: calc(-147 * var(--art-px));
@@ -61,12 +61,12 @@ body {
   pointer-events: none;
 }
 
-.filt,
-.gif {
+.media-filters,
+.tutorial-animation {
   position: absolute;
 }
 
-.gif {
+.tutorial-animation {
   left: calc(var(--gif-x) * var(--art-px));
   top: calc(var(--gif-y) * var(--art-px));
   width: calc(var(--gif-width, 1920) * var(--art-px));
@@ -75,14 +75,14 @@ body {
   pointer-events: none;
 }
 
-.cut {
+.cropped-animation {
   inset: 0;
   width: 100%;
   height: 100%;
   filter: none;
 }
 
-.gif0 {
+.intro-animation {
   --gif-x: calc(209 - var(--side-crop));
   --gif-y: 467;
 }
@@ -95,7 +95,7 @@ body {
   height: max(44px, calc(142 * var(--art-px)));
 }
 
-.s {
+.tutorial-step {
   position: absolute;
   left: calc((637 - var(--side-crop)) * var(--art-px));
   top: calc(var(--step-y) * var(--art-px));
@@ -103,14 +103,14 @@ body {
   scroll-margin-top: 16px;
 }
 
-.s1 {
+.team-step {
   --step-y: 1304;
   --title-height: 93;
   --gif-x: -421;
   --gif-y: -173;
 }
 
-.s2 {
+.dance-step {
   --step-y: 2305;
   --title-height: 167;
   --gif-x: -403;
@@ -118,7 +118,7 @@ body {
   --gif-width: 1859;
 }
 
-.s3 {
+.transformation-step {
   --step-y: 3390;
   --title-height: 99;
   --gif-x: -491;
@@ -126,14 +126,14 @@ body {
   --gif-width: 1999;
 }
 
-.ttl,
+.step-title,
 .frame {
   background-image: url("./assets/P3_preview.png");
   background-repeat: no-repeat;
   background-size: calc(2338 * var(--art-px)) auto;
 }
 
-.ttl {
+.step-title {
   margin: 0;
   height: calc(var(--title-height) * var(--art-px));
   background-position: calc(-637 * var(--art-px)) calc(-1 * var(--step-y) * var(--art-px));
@@ -145,13 +145,13 @@ body {
   background-position: calc(-637 * var(--art-px)) calc(-1 * (var(--step-y) + var(--title-height)) * var(--art-px));
 }
 
-.win {
+.animation-window {
   position: absolute;
   inset: calc(11 * var(--art-px));
   overflow: hidden;
 }
 
-.ft {
+.tutorial-footer {
   margin-inline-start: calc((453 - var(--side-crop)) * var(--art-px));
   width: calc(1433 * var(--art-px));
   padding-inline: calc(13 * var(--art-px)) calc(15 * var(--art-px));
@@ -180,12 +180,12 @@ body {
   color: #424242;
 }
 
-.arw {
+.reply-arrow {
   font-size: 1.15em;
   line-height: 1;
 }
 
-.ci {
+.comment-icon {
   position: relative;
   display: inline-block;
   width: .86em;
@@ -196,7 +196,7 @@ body {
   background: currentColor;
 }
 
-.ci::after {
+.comment-icon::after {
   position: absolute;
   bottom: -.13em;
   left: .21em;
@@ -207,16 +207,16 @@ body {
   content: "";
 }
 
-.cc {
+.comment-count {
   color: #a93c00;
   margin-inline-end: .2em;
 }
 
-.cc:empty {
+.comment-count:empty {
   display: none;
 }
 
-.cprompt {
+.comment-heading {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -228,13 +228,13 @@ body {
   font-weight: 400;
 }
 
-.cpanel {
+.comment-panel {
   padding: clamp(14px, calc(42 * var(--art-px)), 42px) clamp(14px, calc(74 * var(--art-px)), 74px) 0;
   font-size: clamp(1rem, calc(26 * var(--art-px)), 1.25rem);
   line-height: 1.5;
 }
 
-.cscroll {
+.comment-scroll-area {
   --comment-row-height: 1.75em;
   max-block-size: calc(10 * var(--comment-row-height));
   overflow-y: auto;
@@ -242,21 +242,21 @@ body {
   scrollbar-gutter: stable;
 }
 
-.cform:not([hidden]) ~ .cscroll {
+.comment-form:not([hidden]) ~ .comment-scroll-area {
   margin-block-start: clamp(14px, calc(32 * var(--art-px)), 32px);
 }
 
-.cscroll > button {
+.comment-scroll-area > button {
   overflow-anchor: none;
 }
 
-.clist {
+.comment-list {
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.cent {
+.comment-row {
   display: flex;
   gap: .35em;
   min-block-size: var(--comment-row-height);
@@ -264,30 +264,30 @@ body {
   overflow-wrap: anywhere;
 }
 
-.cstar,
-.ctime,
-.cstat {
+.comment-star,
+.comment-time,
+.comment-status {
   color: #495669;
 }
 
-.ctext {
+.comment-text {
   color: #0645cf;
   white-space: pre-wrap;
 }
 
-.ctime {
+.comment-time {
   margin-inline-start: .55em;
   font-size: .8em;
   white-space: nowrap;
 }
 
-.cact,
-.csend {
+.comment-action,
+.comment-send {
   font: inherit;
   cursor: pointer;
 }
 
-.cact {
+.comment-action {
   border: 0;
   padding: .35em .45em;
   color: #385763;
@@ -296,21 +296,21 @@ body {
   text-decoration: underline;
 }
 
-.cent .cact {
+.comment-row .comment-action {
   margin-inline-start: .35em;
   padding-block: .15em;
 }
 
-.cform {
+.comment-form {
   display: grid;
   gap: 8px;
 }
 
-.cform[hidden] {
+.comment-form[hidden] {
   display: none;
 }
 
-.cform textarea {
+.comment-form textarea {
   width: 100%;
   min-height: 100px;
   resize: vertical;
@@ -322,11 +322,11 @@ body {
   font: inherit;
 }
 
-.cform textarea::placeholder {
+.comment-form textarea::placeholder {
   color: #4d6c75;
 }
 
-.csend {
+.comment-send {
   justify-self: end;
   min-height: 42px;
   border: 0;
@@ -335,22 +335,22 @@ body {
   background: #506f76;
 }
 
-.cpanel button:disabled {
+.comment-panel button:disabled {
   opacity: .62;
   cursor: wait;
 }
 
-.cpanel :focus-visible {
+.comment-panel :focus-visible {
   outline: 2px solid #211b7e;
   outline-offset: 2px;
 }
 
-.cstat {
+.comment-status {
   margin: 0;
   font-size: .9em;
 }
 
-.cstat:not(:empty) {
+.comment-status:not(:empty) {
   margin-block-start: .55em;
 }
 
@@ -361,7 +361,7 @@ body {
   margin-block-start: calc(76 * var(--art-px));
 }
 
-.pg {
+.page-button {
   display: grid;
   place-items: center;
   min-width: calc(148 * var(--art-px));
@@ -372,7 +372,7 @@ body {
   font-weight: 600;
 }
 
-.cur {
+.current-page {
   min-width: calc(50 * var(--art-px));
   font-weight: 400;
 }
@@ -398,7 +398,7 @@ a:focus-visible {
   letter-spacing: .045em;
 }
 
-.sideL {
+.explore-sidebar {
   left: calc(145 * var(--art-px));
   width: calc(307 * var(--art-px));
   text-align: center;
@@ -407,7 +407,7 @@ a:focus-visible {
   line-height: calc(38 * var(--art-px));
 }
 
-.sideL ul {
+.explore-sidebar ul {
   position: relative;
   margin: 0;
   list-style: none;
@@ -415,36 +415,36 @@ a:focus-visible {
   border-top: max(1px, calc(2 * var(--art-px))) dashed currentColor;
 }
 
-.sideL .lnk1 {
+.explore-sidebar .explore-links-primary {
   margin-top: calc(37 * var(--art-px));
   padding-top: calc(3 * var(--art-px));
 }
 
-.lnk1::before {
+.explore-links-primary::before {
   position: absolute;
   left: -.32em;
   top: -1.05em;
   content: "：";
 }
 
-.sideL .lnk2 {
+.explore-sidebar .explore-links-secondary {
   margin-top: calc(19 * var(--art-px));
   padding-top: calc(14 * var(--art-px));
 }
 
-.lnk {
+.sidebar-link {
   color: inherit;
   text-decoration: none;
 }
 
 @media (hover: hover) {
-  .lnk:hover {
+  .sidebar-link:hover {
     color: #5b8cff;
     text-decoration: underline;
   }
 }
 
-.sideR {
+.news-sidebar {
   left: calc(1896 * var(--art-px));
   width: calc(311 * var(--art-px));
   color: #eeefe7;
@@ -454,7 +454,7 @@ a:focus-visible {
   overflow-wrap: anywhere;
 }
 
-.sideR p {
+.news-sidebar p {
   margin: 0 0 calc(34 * var(--art-px));
 }
 
@@ -468,22 +468,22 @@ a:focus-visible {
     background-color: var(--tutorial-paper);
   }
 
-  .bg {
+  .tutorial-backdrop {
     top: 0;
   }
 
-  .ttl,
+  .step-title,
   .frame {
     background-image: none;
   }
 
-  .ft {
+  .tutorial-footer {
     font-size: max(13px, calc(34 * var(--art-px)));
   }
 
   .date,
   .meta,
-  .cprompt {
+  .comment-heading {
     min-height: 25px;
   }
 
@@ -491,12 +491,12 @@ a:focus-visible {
     margin-block-start: 20px;
   }
 
-  .pg {
+  .page-button {
     min-height: 44px;
     min-width: 55px;
   }
 
-  .cur {
+  .current-page {
     min-width: 44px;
   }
 
@@ -519,17 +519,17 @@ a:focus-visible {
     line-height: 1.6;
   }
 
-  .sideL .lnk1,
-  .sideL .lnk2 {
+  .explore-sidebar .explore-links-primary,
+  .explore-sidebar .explore-links-secondary {
     margin-top: 10px;
     padding-top: 7px;
   }
 
-  .lnk1::before {
+  .explore-links-primary::before {
     display: none;
   }
 
-  .sideR p {
+  .news-sidebar p {
     margin-bottom: 14px;
   }
 }

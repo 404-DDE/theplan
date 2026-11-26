@@ -2,7 +2,7 @@ const section = document.querySelector("#comments, section[data-api-url]");
 const endpoint = section.dataset.apiUrl;
 const scrollArea = section.querySelector("[role='region']");
 const list = scrollArea.querySelector("ul");
-const count = document.querySelector("#comment-count, .meta .cc");
+const count = document.querySelector("#comment-count, .meta .comment-count");
 const form = section.querySelector("form");
 const message = form.querySelector("textarea");
 const send = form.querySelector("button[type='submit']");
@@ -11,9 +11,9 @@ const status = section.querySelector("[role='status']");
 
 const commentTemplate = document.createElement("template");
 commentTemplate.innerHTML = `
-  <li class="cent">
-    <span class="cstar" aria-hidden="true">★</span>
-    <div><span class="ctext"></span><time class="ctime"></time><button type="button" class="cact">删除</button></div>
+  <li class="comment-row">
+    <span class="comment-star" aria-hidden="true">★</span>
+    <div><span class="comment-text"></span><time class="comment-time"></time><button type="button" class="comment-action">删除</button></div>
   </li>
 `;
 
@@ -89,9 +89,9 @@ function addComment(comment, prepend = false) {
   if (entries.has(comment.id)) return;
 
   const entry = commentTemplate.content.firstElementChild.cloneNode(true);
-  entry.querySelector(".ctext").textContent = comment.body;
+  entry.querySelector(".comment-text").textContent = comment.body;
 
-  const time = entry.querySelector(".ctime");
+  const time = entry.querySelector(".comment-time");
   time.dateTime = comment.createdAt;
   time.textContent = dateFormat.format(new Date(comment.createdAt));
 
