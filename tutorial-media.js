@@ -5,8 +5,9 @@ const finalSteps = document.querySelectorAll("[data-animation-stage='final']");
 
 async function playAnimation(poster) {
   const animation = new Image();
+  const sources = [poster.dataset.animation, poster.dataset.fallback].filter(Boolean);
 
-  for (const source of [poster.dataset.animation, poster.dataset.fallback].filter(Boolean)) {
+  for (const source of sources) {
     animation.src = source;
     try {
       await animation.decode();
@@ -22,10 +23,14 @@ async function playAnimation(poster) {
     poster.src = source;
     return;
   }
+
+  console.warn("Could not load tutorial animation", sources.join(", "));
 }
 
 async function loadAnimations() {
-  await backdrop.decode().catch(() => {});
+  await backdrop.decode().catch((error) => {
+    console.warn("Could not load tutorial backdrop", backdrop.currentSrc || backdrop.src, error);
+  });
   await playAnimation(intro);
   await playAnimation(firstStep);
   await Promise.all(Array.from(finalSteps, playAnimation));
